@@ -54,7 +54,7 @@ def init_db():
     }
 
     immaginidict = {
-        "imgs": ["media/placeholder_image.png"]*5,
+        "imgs": ["imgs/placeholder_image.png"]*5,
         "testi_alternativi": ["immagine di gioco"]*5,
         "prodotti": ["The Elder Scrolls V: Skyrim Special Edition", "The Elder Scrolls V: Skyrim Special Edition", "Dark Souls: Remastered", "Minecraft", "Crash Bandicoot N. Sane Trilogy", "Dummy Game"]
     }
@@ -71,7 +71,7 @@ def init_db():
         "testi": ["Qual'è il genere di questo videogioco?", "Ci sono i mostri?", "Quante ore dura la storia?", "Riesco a giocarlo con un Intel Core i5-13500?", "Quanti livelli ci sono?"],
         "risposte": ["RPG", "Si ci sono molti tipi di creature", "", "Si, se non installi troppe mod", ""],
         "utenti": ["Ritroder", "Ayaya", "IronMaidenEnjoyer", "Abstract Lettuce", "1TacticalBadger"],
-        "utenti_risposte": ["1TacticalBadger", "Ritroder", "Abstract Lettuce", "Ritroder", "Ritroder"],
+        "utenti_risposte": ["1TacticalBadger", "Ritroder", "", "Ritroder", ""],
         "prodotti": ["The Elder Scrolls V: Skyrim Special Edition", "The Elder Scrolls V: Skyrim Special Edition", "Minecraft", "Minecraft", "Crash Bandicoot N. Sane Trilogy"]
     }
 

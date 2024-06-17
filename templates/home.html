@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    
+    <p><a href="{% url "ricerca" %}">Cerca nello store</a></p>
+    
+    <h3>Videogiochi più popolari</h3>
+    <ul>
+    {% for p in popolari %}
+        <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
+    {% endfor %}
+    </ul>
+    
+    <h3>Videogiochi usciti di recente</h3>
+    <ul>
+    {% for r in recenti %}
+        <li><a href="{% url "pagina_negozio" r.pk %}">{{ r.titolo }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

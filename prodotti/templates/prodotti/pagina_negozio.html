@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    
+    <h2>{{ prodotto.titolo }}</h2>
+    
+    <p>{{ prodotto.descrizione }}</p>
+    
+    <p>Genere: {{ prodotto.genere }}</p>
+    
+    {% for img in prodotto.immagini.all %}
+        <img src="{% static img.img %}" alt="{{ img.testo_alternativo }}" width="247" height="192">
+    {% endfor %}
+    
+    <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
+    <p>Editore: {{ prodotto.editore.nome }}</p>
+    <p>Sviluppatore: {{ prodotto.sviluppatore.nome }}</p>
+    
+    <p>Prezzo: {{ prodotto.prezzo }} <button>Acquista</button></p>
+    
+    <p>Requisiti: {{ prodotto.requisiti }}</p>
+    
+    <h3>Domande</h3>
+    {% for d in prodotto.domande.all %}
+        <p><strong>{{ d.utente.nome}}: {{ d.testo }}</strong></p>
+        {% if d.risposta != "" %}
+            <p>{{ d.utente_risposta.nome }}: {{ d.risposta }}</p>
+        {% elif user.is_authenticated %}
+            <button>Rispondi</button>
+        {% endif %}
+    {% endfor %}
+    
+    <h3>Recensioni</h3>
+    {% for r in prodotto.recensioni.all %}
+        <p><strong>Utente: {{ r.utente.nome }}, Voto: {{ r.voto }}</strong></p>
+        <p>Pubblicata il {{ r.data_pubblicazione }}</p>
+        <p>{{ r.testo }}</p>
+    {% endfor %}
+    
+    <p><a href="{% url "home" %}">Pagina principale</a></p>
+
+{% endblock %}
