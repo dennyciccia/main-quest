@@ -4,7 +4,7 @@ from django.db import models
 class Utente(models.Model):
     nome = models.CharField(max_length=100)
     foto_profilo = models.ImageField()
-    biografia = models.TextField()
+    biografia = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Utenti"
