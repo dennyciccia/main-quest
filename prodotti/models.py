@@ -8,6 +8,7 @@ class Prodotto(models.Model):
     prezzo = models.DecimalField(decimal_places=2, max_digits=10)
     requisiti = models.CharField(max_length=500)
     data_rilascio = models.DateField()
+    genere = models.CharField(max_length=50)
     editore = models.ForeignKey(Editore, on_delete=models.CASCADE, related_name="prodotti")
     sviluppatore = models.ForeignKey(Sviluppatore, null=True, on_delete=models.SET_NULL, related_name="prodotti")
     acquirenti = models.ManyToManyField(Utente, related_name="prodotti")

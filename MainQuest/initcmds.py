@@ -37,24 +37,26 @@ def init_db():
     }
 
     prodottidict = {
-        "titoli": ["The Elder Scrolls V: Skyrim Special Edition", "The Witcher 3: Wild Hunt", "Dark Souls: Remastered", "Minecraft", "Crash Bandicoot N. Sane Trilogy"],
+        "titoli": ["The Elder Scrolls V: Skyrim Special Edition", "The Witcher 3: Wild Hunt", "Dark Souls: Remastered", "Minecraft", "Crash Bandicoot N. Sane Trilogy", "Dummy Game"],
         "descrizioni": ["Vincitore di oltre 200 premi Gioco dell’Anno, The Elder Scrolls V: Skyrim Special Edition porta sui vostri schermi il fantasy epico con dettagli mozzafiato. La Special Edition include l’acclamato gioco e gli add-on con nuove funzioni.",
                         "Vesti i panni di Geralt di Rivia, cacciatore di mostri, in una terra devastata dalla guerra e infestata da terribili creature. Il tuo contratto? Rintracciare Ciri, la Figlia della Profezia, un'arma vivente che può alterare il destino del mondo.",
                         "E poi venne il Fuoco. Rivivi l'esperienza che ha rivoluzionato il mondo dei videogiochi e dato vita a un nuovo genere. Esplora la terra di Lordran in una splendida versione rimasterizzata in altissima definizione a 60 fps.",
                         "Esplora mondi unici, sopravvivi alla notte e crea tutto quello che riesci a immaginare!",
-                        "Crash Bandicoot™, il tuo marsupiale preferito, è tornato! Più bello e scatenato che mai, è pronto a lanciarsi nelle danze nella collezione Trilogia N. Sane."],
-        "prezzi": [39.99, 29.99, 39.99, 19.99, 39.99],
-        "requisiti": ["GeForce GTX 780 / Radeon R9 290", "GeForce GTX 1070 / Radeon RX 480", "GeForce GTX 660 / Radeon HD 7870", "GeForce GTX 700 / Radeon RX 200", "GeForce GTX 660 / Radeon HD 7850"],
-        "date_rilascio": [date(2016, 10, 28), date(2015, 5, 18), date(2018, 5, 24), date(2011, 11, 18), date(2018, 6, 29)],
-        "editori": ["Bethesda Softworks", "CD PROJECT RED", "Bandai Namco Entertainment", "Xbox Game Studios", "Activision"],
-        "sviluppatori": ["Bethesda Game Studios", "CD PROJECT RED", "FromSoftware", "Mojang", "Iron Galaxy"],
-        "acquirenti": [["Ritroder", "1TacticalBadger"], ["IronMaidenLover, Ritroader"], [], ["Abstract Lettuce", "IronMaidenEnjoyer", "Ritroder", "1TacticalBadger"], ["Ritroder"]]
+                        "Crash Bandicoot™, il tuo marsupiale preferito, è tornato! Più bello e scatenato che mai, è pronto a lanciarsi nelle danze nella collezione Trilogia N. Sane.",
+                        "Un gioco molto bello, talmente bello che sembra finto."],
+        "prezzi": [39.99, 29.99, 39.99, 19.99, 39.99, 9.99],
+        "requisiti": ["GeForce GTX 780 / Radeon R9 290", "GeForce GTX 1070 / Radeon RX 480", "GeForce GTX 660 / Radeon HD 7870", "GeForce GTX 700 / Radeon RX 200", "GeForce GTX 660 / Radeon HD 7850", "GeForce RTX 4090 / Radeon RX 7900 XTX"],
+        "date_rilascio": [date(2016, 10, 28), date(2015, 5, 18), date(2018, 5, 24), date(2011, 11, 18), date(2018, 6, 29), date(2024, 6, 15)],
+        "generi": ["RPG", "RPG", "Action RPG", "SandBox", "Platform 3D", "Open World"],
+        "editori": ["Bethesda Softworks", "CD PROJECT RED", "Bandai Namco Entertainment", "Xbox Game Studios", "Activision", "Bethesda Softworks"],
+        "sviluppatori": ["Bethesda Game Studios", "CD PROJECT RED", "FromSoftware", "Mojang", "Iron Galaxy", "Mojang"],
+        "acquirenti": [["Ritroder", "1TacticalBadger"], ["IronMaidenLover, Ritroader"], [], ["Abstract Lettuce", "IronMaidenEnjoyer", "Ritroder", "1TacticalBadger"], ["Ritroder"], []]
     }
 
     immaginidict = {
         "imgs": ["media/placeholder_image.png"]*5,
         "testi_alternativi": ["immagine di gioco"]*5,
-        "prodotti": ["The Elder Scrolls V: Skyrim Special Edition", "The Elder Scrolls V: Skyrim Special Edition", "Dark Souls: Remastered", "Minecraft", "Crash Bandicoot N. Sane Trilogy"]
+        "prodotti": ["The Elder Scrolls V: Skyrim Special Edition", "The Elder Scrolls V: Skyrim Special Edition", "Dark Souls: Remastered", "Minecraft", "Crash Bandicoot N. Sane Trilogy", "Dummy Game"]
     }
 
     recensionidict = {
@@ -74,7 +76,7 @@ def init_db():
     }
 
     # creazione tabelle
-    for i in range(5):
+    for i in range(len(utentidict["nomi"])):
         u = Utente()
         for k in utentidict:
             if k == "nomi":
@@ -85,7 +87,7 @@ def init_db():
                 u.biografia = utentidict[k][i]
         u.save()
 
-    for i in range(5):
+    for i in range(len(editoridict["nomi"])):
         e = Editore()
         for k in editoridict:
             if k == "nomi":
@@ -94,7 +96,7 @@ def init_db():
                 e.foto = editoridict[k][i]
         e.save()
 
-    for i in range(5):
+    for i in range(len(sviluppatoridict["nomi"])):
         s = Sviluppatore()
         for k in sviluppatoridict:
             if k == "nomi":
@@ -103,7 +105,7 @@ def init_db():
                 s.foto = sviluppatoridict[k][i]
         s.save()
 
-    for i in range(5):
+    for i in range(len(prodottidict["titoli"])):
         p = Prodotto()
         for k in prodottidict:
             if k == "titoli":
@@ -116,6 +118,8 @@ def init_db():
                 p.requisiti = prodottidict[k][i]
             if k == "date_rilascio":
                 p.data_rilascio = prodottidict[k][i]
+            if k == "generi":
+                p.genere = prodottidict[k][i]
             if k == "editori":
                 p.editore = Editore.objects.get(nome=prodottidict[k][i])
             if k == "sviluppatori":
@@ -125,7 +129,7 @@ def init_db():
                 p.acquirenti.add(*(Utente.objects.filter(nome__in=prodottidict[k][i])))
         p.save()
 
-    for i in range(5):
+    for i in range(len(immaginidict["imgs"])):
         img = Immagine()
         for k in immaginidict:
             if k == "imgs":
@@ -136,7 +140,7 @@ def init_db():
                 img.prodotto = Prodotto.objects.filter(titolo__iexact=immaginidict[k][i]).first()
         img.save()
 
-    for i in range(5):
+    for i in range(len(recensionidict["testi"])):
         r = Recensione()
         for k in recensionidict:
             if k == "testi":
@@ -151,7 +155,7 @@ def init_db():
                 r.prodotto = Prodotto.objects.get(titolo=recensionidict[k][i])
         r.save()
 
-    for i in range(5):
+    for i in range(len(domandedict["testi"])):
         d = Domanda()
         for k in domandedict:
             if k == "testi":
