@@ -22,10 +22,13 @@ from .views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r"^$|^\/$|^home\/$", home, name="home"),
+
     path("login/", login, name="login"),
     path("register/", register, name="register"),
+    path("cerca/risultati/", risultati_ricerca, name="risultati_ricerca"),
 
-    path("prodotti/", include("prodotti.urls"))
+    path("prodotti/", include("prodotti.urls")),
+    path("utenti/", include("utenti.urls"))
 ]
 
 #erase_db()

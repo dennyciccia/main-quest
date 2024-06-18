@@ -41,6 +41,8 @@
         <p>{{ r.testo }}</p>
     {% endfor %}
     
-    <p><a href="{% url "home" %}">Pagina principale</a></p>
+    <p><a onclick="history.back()">Pagina precedente</a></p>
+    
+    {% include "footer.html" %}
 
 {% endblock %}

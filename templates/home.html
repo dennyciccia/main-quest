@@ -6,8 +6,6 @@
 
 {% block content %}
     
-    <p><a href="{% url "ricerca" %}">Cerca nello store</a></p>
-    
     <h3>Videogiochi più popolari</h3>
     <ul>
     {% for p in popolari %}
@@ -21,5 +19,11 @@
         <li><a href="{% url "pagina_negozio" r.pk %}">{{ r.titolo }}</a></li>
     {% endfor %}
     </ul>
+    
+    <h3>Cerca nello store</h3>
+    <form method="POST" action="{% url "risultati_ricerca" %}"> {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Cerca">
+    </form>
 
 {% endblock %}
