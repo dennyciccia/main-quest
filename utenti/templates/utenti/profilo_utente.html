@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} {{ utente.nome }} {% endblock %}
+
+{% block content %}
+    
+    <h2>{{ utente.nome }}</h2>
+    
+    <img src="{% static utente.foto_profilo %}" alt="foto profilo" width="360" height="360">
+    
+    <p><strong>Biografia:</strong></p>
+    <p>{{ utente.biografia }}</p>
+    
+    <h3>Giochi posseduti:</h3>
+    <ul>
+    {% for p in utente.prodotti.all %}
+        <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
+    {% endfor %}
+    </ul>
+    
+    <p><a href="{% url "home" %}">Pagina principale</a></p>
+
+{% endblock %}

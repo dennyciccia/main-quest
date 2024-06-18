@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} {{ object.nome }} {% endblock %}
+
+{% block content %}
+    
+    <h2>{{ object.nome }}</h2>
+    
+    <img src="{% static object.foto_profilo %}" alt="foto profilo" width="360" height="360">
+    
+    <h3>Giochi pubblicati:</h3>
+    <ul>
+    {% for p in object.prodotti.all %}
+        <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
+    {% endfor %}
+    </ul>
+    
+    <p><a href="{% url "home" %}">Pagina principale</a></p>
+
+{% endblock %}

@@ -11,4 +11,4 @@ def cerca():
 
 class PaginaNegozio(DetailView):
     model = Prodotto
-    template_name="prodotti/pagina_negozio.html"
+    template_name = "prodotti/pagina_negozio.html"

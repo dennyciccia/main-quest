@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} {{ title }} {% endblock %}
+{% block title %} {{ prodotto.titolo }} {% endblock %}
 
 {% block content %}
     
@@ -17,8 +17,8 @@
     {% endfor %}
     
     <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
-    <p>Editore: {{ prodotto.editore.nome }}</p>
-    <p>Sviluppatore: {{ prodotto.sviluppatore.nome }}</p>
+    <p>Editore: <a href="{% url "profilo_editore" prodotto.editore.pk %}">{{ prodotto.editore.nome }}</a></p>
+    <p>Sviluppatore: <a href="{% url "profilo_sviluppatore" prodotto.sviluppatore.pk %}">{{ prodotto.sviluppatore.nome }}</a></p>
     
     <p>Prezzo: {{ prodotto.prezzo }} <button>Acquista</button></p>
     
@@ -26,9 +26,9 @@
     
     <h3>Domande</h3>
     {% for d in prodotto.domande.all %}
-        <p><strong>{{ d.utente.nome}}: {{ d.testo }}</strong></p>
+        <p><strong><a href="{% url "profilo_acquirente" d.utente.pk %}">{{ d.utente.nome}}</a>: {{ d.testo }}</strong></p>
         {% if d.risposta != "" %}
-            <p>{{ d.utente_risposta.nome }}: {{ d.risposta }}</p>
+            <p><a href="{% url "profilo_acquirente" d.utente_risposta.pk %}">{{ d.utente_risposta.nome }}</a>: {{ d.risposta }}</p>
         {% elif user.is_authenticated %}
             <button>Rispondi</button>
         {% endif %}
@@ -36,7 +36,7 @@
     
     <h3>Recensioni</h3>
     {% for r in prodotto.recensioni.all %}
-        <p><strong>Utente: {{ r.utente.nome }}, Voto: {{ r.voto }}</strong></p>
+        <p><strong>Utente: <a href="{% url "profilo_acquirente" r.utente.pk %}">{{ r.utente.nome }}</a>, Voto: {{ r.voto }}</strong></p>
         <p>Pubblicata il {{ r.data_pubblicazione }}</p>
         <p>{{ r.testo }}</p>
     {% endfor %}
