@@ -17,8 +17,8 @@
     {% endfor %}
     
     <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
-    <p>Editore: <a href="{% url "profilo_editore" prodotto.editore.pk %}">{{ prodotto.editore.nome }}</a></p>
-    <p>Sviluppatore: <a href="{% url "profilo_sviluppatore" prodotto.sviluppatore.pk %}">{{ prodotto.sviluppatore.nome }}</a></p>
+    <p>Editore: <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
+    <p>Sviluppatore: <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
     
     <p>Prezzo: {{ prodotto.prezzo }} <button>Acquista</button></p>
     
@@ -40,6 +40,10 @@
         <p>Pubblicata il {{ r.data_pubblicazione }}</p>
         <p>{{ r.testo }}</p>
     {% endfor %}
+    
+    {% if next %}
+        <p><a href="{{ next }}?terms={{ terms }}">Pagina precedente</a></p>
+    {% endif %}
     
     <p><a onclick="history.back()">Pagina precedente</a></p>
     

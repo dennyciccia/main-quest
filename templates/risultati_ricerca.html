@@ -15,34 +15,25 @@
             <h3>Videogiochi</h3>
             <ul>
             {% for p in prodotti %}
-                <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
+                <li><a href="{% url "pagina_negozio" p.pk %}?next={{ request.path }}&terms={{ terms }}">{{ p.titolo }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}
         
-        {% if utenti %}
+        {% if acquirenti %}
             <h3>Utenti</h3>
             <ul>
-            {% for u in utenti %}
-                <li><a href="{% url "profilo_acquirente" u.pk %}">{{ u.nome }}</a></li>
+            {% for a in acquirenti %}
+                <li><a href="{% url "profilo_acquirente" u.pk %}?next={{ request.path }}&terms={{ terms }}">{{ u.nome }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}
         
-        {% if editori %}
-            <h3>Editori</h3>
+        {% if venditori %}
+            <h3>Venditori</h3>
             <ul>
-            {% for e in editori %}
-                <li><a href="{% url "profilo_editore" e.pk %}">{{ e.nome }}</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        
-        {% if sviluppatori %}
-            <h3>Sviluppatori</h3>
-            <ul>
-            {% for s in sviluppatori %}
-                <li><a href="{% url "profilo_sviluppatore" s.pk %}">{{ s.nome }}</a></li>
+            {% for v in venditori %}
+                <li><a href="{% url "profilo_venditore" v.pk %}?next={{ request.path }}&terms={{ terms }}">{{ v.nome }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}

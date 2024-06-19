@@ -25,6 +25,7 @@ urlpatterns = [
 
     path("login/", login, name="login"),
     path("register/", register, name="register"),
+    path("logout/", logout, name="logout"),
     path("cerca/risultati/", risultati_ricerca, name="risultati_ricerca"),
 
     path("prodotti/", include("prodotti.urls")),

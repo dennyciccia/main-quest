@@ -1,12 +1,13 @@
 from prodotti.models import Prodotto, Recensione, Domanda, Immagine
-from utenti.models import Utente, Editore, Sviluppatore
+from utenti.models import CustomUser, Acquirente, Venditore
 from datetime import date
+from django.contrib.auth.hashers import make_password
 
 def erase_db():
     print("Cancellazione DB ...")
-    Utente.objects.all().delete()
-    Sviluppatore.objects.all().delete()
-    Editore.objects.all().delete()
+    CustomUser.objects.all().delete()
+    Acquirente.objects.all().delete()
+    Venditore.objects.all().delete()
     Prodotto.objects.all().delete()
     Immagine.objects.all().delete()
     Recensione.objects.all().delete()
@@ -20,20 +21,15 @@ def init_db():
     print("Inizializzazione DB ...")
 
     # definizioni dati
-    utentidict = {
+    acquirentidict = {
         "nomi": ["Abstract Lettuce", "IronMaidenEnjoyer", "Ayaya", "Ritroder", "1TacticalBadger"],
-        "foto": ["media/default_profile_image.png"]*5,
+        "foto": ["imgs/default_profile_image.png"]*5,
         "biografie": ["Mi piacciono i giochi sandbox", "Adoro la musica metal", "", "Skyrim lover", ""]
     }
 
-    editoridict = {
+    venditoridict = {
         "nomi": ["Bethesda Softworks", "CD PROJECT RED", "Bandai Namco Entertainment", "Xbox Game Studios", "Activision"],
-        "foto": ["media/default_profile_image.png"]*5
-    }
-
-    sviluppatoridict = {
-        "nomi": ["Bethesda Game Studios", "CD PROJECT RED", "FromSoftware", "Mojang", "Iron Galaxy"],
-        "foto": ["media/default_profile_image.png"]*5
+        "foto": ["imgs/default_profile_image.png"]*5
     }
 
     prodottidict = {
@@ -48,8 +44,7 @@ def init_db():
         "requisiti": ["GeForce GTX 780 / Radeon R9 290", "GeForce GTX 1070 / Radeon RX 480", "GeForce GTX 660 / Radeon HD 7870", "GeForce GTX 700 / Radeon RX 200", "GeForce GTX 660 / Radeon HD 7850", "GeForce RTX 4090 / Radeon RX 7900 XTX"],
         "date_rilascio": [date(2016, 10, 28), date(2015, 5, 18), date(2018, 5, 24), date(2011, 11, 18), date(2018, 6, 29), date(2024, 6, 15)],
         "generi": ["RPG", "RPG", "Action RPG", "SandBox", "Platform 3D", "Open World"],
-        "editori": ["Bethesda Softworks", "CD PROJECT RED", "Bandai Namco Entertainment", "Xbox Game Studios", "Activision", "Bethesda Softworks"],
-        "sviluppatori": ["Bethesda Game Studios", "CD PROJECT RED", "FromSoftware", "Mojang", "Iron Galaxy", "Mojang"],
+        "venditori": ["Bethesda Softworks", "CD PROJECT RED", "Bandai Namco Entertainment", "Xbox Game Studios", "Activision", "Bethesda Softworks"],
         "acquirenti": [["Ritroder", "1TacticalBadger"], ["IronMaidenLover, Ritroader"], [], ["Abstract Lettuce", "IronMaidenEnjoyer", "Ritroder", "1TacticalBadger"], ["Ritroder"], []]
     }
 
@@ -76,34 +71,35 @@ def init_db():
     }
 
     # creazione tabelle
-    for i in range(len(utentidict["nomi"])):
-        u = Utente()
-        for k in utentidict:
+    for i in range(len(acquirentidict["nomi"])):
+        u = CustomUser.objects.create(
+            username=acquirentidict["nomi"][i],
+            email=f"email{i}@email.com",
+            password=make_password("password"))
+        a = Acquirente()
+        a.user = u
+        for k in acquirentidict:
             if k == "nomi":
-                u.nome = utentidict[k][i]
+                a.nome = acquirentidict[k][i]
             if k == "foto":
-                u.foto = utentidict[k][i]
+                a.foto_profilo = acquirentidict[k][i]
             if k == "biografie":
-                u.biografia = utentidict[k][i]
-        u.save()
+                a.biografia = acquirentidict[k][i]
+        a.save()
 
-    for i in range(len(editoridict["nomi"])):
-        e = Editore()
-        for k in editoridict:
+    for i in range(len(venditoridict["nomi"])):
+        u = CustomUser.objects.create(
+            username=venditoridict["nomi"][i],
+            email=f"email{i}@email.com",
+            password=make_password("password"))
+        e = Venditore()
+        e.user = u
+        for k in venditoridict:
             if k == "nomi":
-                e.nome = editoridict[k][i]
+                e.nome = venditoridict[k][i]
             if k == "foto":
-                e.foto = editoridict[k][i]
+                e.foto_profilo = venditoridict[k][i]
         e.save()
-
-    for i in range(len(sviluppatoridict["nomi"])):
-        s = Sviluppatore()
-        for k in sviluppatoridict:
-            if k == "nomi":
-                s.nome = sviluppatoridict[k][i]
-            if k == "foto":
-                s.foto = sviluppatoridict[k][i]
-        s.save()
 
     for i in range(len(prodottidict["titoli"])):
         p = Prodotto()
@@ -120,13 +116,11 @@ def init_db():
                 p.data_rilascio = prodottidict[k][i]
             if k == "generi":
                 p.genere = prodottidict[k][i]
-            if k == "editori":
-                p.editore = Editore.objects.get(nome=prodottidict[k][i])
-            if k == "sviluppatori":
-                p.sviluppatore = Sviluppatore.objects.get(nome=prodottidict[k][i])
+            if k == "venditori":
+                p.venditore = Venditore.objects.get(nome=prodottidict[k][i])
             if k == "acquirenti":
                 p.save()
-                p.acquirenti.add(*(Utente.objects.filter(nome__in=prodottidict[k][i])))
+                p.acquirenti.add(*(Acquirente.objects.filter(nome__in=prodottidict[k][i])))
         p.save()
 
     for i in range(len(immaginidict["imgs"])):
@@ -150,7 +144,7 @@ def init_db():
             if k == "date_pubblicazione":
                 r.data_pubblicazione = recensionidict[k][i]
             if k == "utenti":
-                r.utente = Utente.objects.get(nome=recensionidict[k][i])
+                r.utente = Acquirente.objects.get(nome=recensionidict[k][i])
             if k == "prodotti":
                 r.prodotto = Prodotto.objects.get(titolo=recensionidict[k][i])
         r.save()
@@ -163,18 +157,18 @@ def init_db():
             if k == "risposte":
                 d.risposta = domandedict[k][i]
             if k == "utenti":
-                d.utente = Utente.objects.get(nome=domandedict[k][i])
-            if k == "utenti_risposte":
-                d.utente_risposta = Utente.objects.get(nome=domandedict[k][i])
+                d.utente = Acquirente.objects.get(nome=domandedict[k][i])
+            if k == "utenti_risposte" and d.risposta is not None:
+                d.utente_risposta = Acquirente.objects.get(nome=domandedict[k][i])
             if k == "prodotti":
                 d.prodotto = Prodotto.objects.get(titolo=domandedict[k][i])
         d.save()
 
     # dump del DB
     print("DUMP DB")
-    print(Utente.objects.all())
-    print(Editore.objects.all())
-    print(Sviluppatore.objects.all())
+    print(CustomUser.objects.all())
+    print(Acquirente.objects.all())
+    print(Venditore.objects.all())
     print(Prodotto.objects.all())
     print(Immagine.objects.all())
     print(Recensione.objects.all())

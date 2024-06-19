@@ -21,6 +21,5 @@ from .views import *
 
 urlpatterns = [
     path("utente/<int:pk>", ProfiloAcquirente.as_view(), name="profilo_acquirente"),
-    path("editore/<int:pk>", ProfiloEditore.as_view(), name="profilo_editore"),
-    path("sviluppatore/<int:pk>", ProfiloSviluppatore.as_view(), name="profilo_sviluppatore"),
+    path("venditore/<int:pk>", ProfiloVenditore.as_view(), name="profilo_venditore"),
 ]

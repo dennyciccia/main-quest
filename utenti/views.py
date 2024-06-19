@@ -1,28 +1,16 @@
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
-from utenti.models import Utente, Editore, Sviluppatore
+from utenti.models import Acquirente, Venditore
 
 
 # Create your views here.
 
 class ProfiloAcquirente(DetailView):
-    model = Utente
-    template_name = "utenti/profilo_utente.html"
+    model = Acquirente
+    template_name = "utenti/profilo_acquirente.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["back"] = self.request.META.get("HTTP_REFERER")
 
-class ProfiloEditoreSviluppatore(DetailView):
-    template_name = "utenti/profilo_editore_sviluppatore.html"
+class ProfiloVenditore(DetailView):
+    model = Venditore
+    template_name = "utenti/profilo_venditore.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["back"] = self.request.META.get("HTTP_REFERER")
-        return context
-
-class ProfiloEditore(ProfiloEditoreSviluppatore):
-    model = Editore
-
-class ProfiloSviluppatore(ProfiloEditoreSviluppatore):
-    model = Sviluppatore

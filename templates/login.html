@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accedi</title>
+</head>
+<body>
+    <h1>Main Quest</h1>
+    
+    <h2>Accedi</h2>
+
+    <form method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">Accedi</button>
+    </form>
+
+    <p><a onclick="history.back()">Annulla</a></p>
+
+    {% include "footer.html" %}
+</body>
+</html>

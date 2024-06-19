@@ -20,6 +20,5 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path("cerca/", cerca, name="ricerca"),
     path("game/<int:pk>", PaginaNegozio.as_view(), name="pagina_negozio"),
 ]
