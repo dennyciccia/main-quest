@@ -20,7 +20,9 @@
     {% endfor %}
     </ul>
     
-    <p><a onclick="history.back()">Pagina precedente</a></p>
+    {% if next %}
+        <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+    {% endif %}
     
     {% include "footer.html" %}
 

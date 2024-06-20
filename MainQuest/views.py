@@ -1,17 +1,15 @@
-from datetime import timedelta
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
 from django.utils.timezone import now
-from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
 from MainQuest.forms import SearchForm, RegisterForm
 from prodotti.models import Prodotto
 from utenti.models import Acquirente, Venditore
 import django.contrib.auth as dj
+from datetime import timedelta
 
 
 def home(request):
@@ -44,6 +42,7 @@ def register(request):
             u.nome = request.POST["username"]
             u.foto_profilo = "imgs/default_profile_image.png"
             u.save()
+            messages.success(request, message="Registrazione avvenuta con successo!")
             return redirect("login")
     else:
         form = RegisterForm()
@@ -68,27 +67,30 @@ def logout(request):
     return redirect("home")
 
 def risultati_ricerca(request):
-    # istanzio il form con i valori inseriti dall'utente che ora sono nel POST
-    form = SearchForm(request.POST)
-
-    # se il form non ha erroriupdate
-    if form.is_valid():
-        search_terms = form.cleaned_data.get("search_terms")
-
-        if request.GET.get("terms") is not None:
-            search_terms = request.GET.get("terms")
-
+    def trova_risultati(st):
         # ricerca dei risultati
-        prodotti_results = Prodotto.objects.filter(titolo__icontains=search_terms)
-        acquirenti_results = Acquirente.objects.filter(nome__icontains=search_terms)
-        venditori_results = Venditore.objects.filter(nome__icontains=search_terms)
-
+        prodotti_results = Prodotto.objects.filter(titolo__icontains=st)
+        acquirenti_results = Acquirente.objects.filter(nome__icontains=st)
+        venditori_results = Venditore.objects.filter(nome__icontains=st)
         nessun_risultato = not prodotti_results.exists() and not acquirenti_results.exists() and not venditori_results.exists()
-
         # creazione del context
         context = {"prodotti": prodotti_results, "acquirenti": acquirenti_results, "venditori": venditori_results, "nessun_risultato": nessun_risultato, "terms": search_terms}
+        return context
 
+    if request.method == "POST":
+        # istanzio il form con i valori inseriti dall'utente che ora sono nel POST
+        form = SearchForm(request.POST)
+        # se il form non ha errori
+        if form.is_valid():
+            search_terms = form.cleaned_data.get("search_terms")
+            # ricerca dei risultati
+            context = trova_risultati(search_terms)
+            return render(request, template_name="risultati_ricerca.html", context=context)
+        # se il form ha errori ritorna alla home
+        return redirect("home")
+
+    elif request.method == "GET" and request.GET.get("terms") is not None:
+        search_terms = request.GET.get("terms")
+        # ricerca dei risultati
+        context = trova_risultati(search_terms)
         return render(request, template_name="risultati_ricerca.html", context=context)
-
-    # se il form ha errori ritorna alla home
-    return redirect("home")
