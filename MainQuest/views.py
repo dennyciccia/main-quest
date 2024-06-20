@@ -43,7 +43,7 @@ def register(request):
             u.nome = request.POST["username"]
             u.foto_profilo = "imgs/default_profile_image.png"
             u.save()
-            messages.success(request, message="Registrazione avvenuta con successo!")
+            messages.success(request, message="Registrazione avvenuta con successo.")
             return redirect("login")
     else:
         form = RegisterForm()
@@ -65,6 +65,7 @@ def login(request):
 @login_required
 def logout(request):
     dj.logout(request)
+    messages.success(request, message="Utente disconnesso.")
     return redirect("home")
 
 def risultati_ricerca(request):
