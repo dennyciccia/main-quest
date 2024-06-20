@@ -71,9 +71,12 @@ def risultati_ricerca(request):
     # istanzio il form con i valori inseriti dall'utente che ora sono nel POST
     form = SearchForm(request.POST)
 
-    # se il form non ha errori
+    # se il form non ha erroriupdate
     if form.is_valid():
         search_terms = form.cleaned_data.get("search_terms")
+
+        if request.GET.get("terms") is not None:
+            search_terms = request.GET.get("terms")
 
         # ricerca dei risultati
         prodotti_results = Prodotto.objects.filter(titolo__icontains=search_terms)

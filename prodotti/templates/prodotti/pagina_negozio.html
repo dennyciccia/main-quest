@@ -40,9 +40,9 @@
         <p>Pubblicata il {{ r.data_pubblicazione }}</p>
         <p>{{ r.testo }}</p>
     {% endfor %}
-    
+
     {% if next %}
-        <p><a href="{{ next }}?terms={{ terms }}">Pagina precedente</a></p>
+        <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
     {% endif %}
     
     <p><a onclick="history.back()">Pagina precedente</a></p>
