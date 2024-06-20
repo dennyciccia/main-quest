@@ -18,11 +18,11 @@ def home(request):
     popolari = Prodotto.objects.annotate(num_acquirenti=Count('acquirenti')).order_by('-num_acquirenti')[:primi_n]
     recenti = Prodotto.objects.filter(data_rilascio__gte=(now() - timedelta(days=30)))
 
-    #inizializzo il form
+    #inizializzo il form per la ricerca
     form = SearchForm()
 
     # definisco il context
-    context = {"title": "Home", "popolari": popolari, "recenti": recenti, "form": form}
+    context = {"title": "Home", "popolari": popolari, "recenti": recenti, "search_form": form}
 
     return render(request, template_name="home.html", context=context)
 
@@ -31,6 +31,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            u = None
             if request.POST["user_type"] == "acquirente":
                 g = Group.objects.get(name="Acquirenti")
                 u = Acquirente()
@@ -46,7 +47,7 @@ def register(request):
             return redirect("login")
     else:
         form = RegisterForm()
-    return render(request, template_name="register.html", context={"form": form})
+    return render(request, template_name="register.html", context={"form": form, "next": request.GET.get("next")})
 
 def login(request):
     if request.method == 'POST':

@@ -15,8 +15,31 @@
         <button type="submit">Accedi</button>
     </form>
 
-    <p><a onclick="history.back()">Annulla</a></p>
+    {% if next %}
+        <p><a href="{{ next }}">Annulla</a></p>
+    {% endif %}
 
     {% include "footer.html" %}
+
+    <!-- parte del messaggio di conferma avvenuta o non avvenuta registrazione-->
+    
+    {% if messages %}
+        <div id="message-container">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script>
+        // chiama la funzione quando viene caricato il contenuto del DOM
+        document.addEventListener("DOMContentLoaded", function() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                // Mostra il message-container come popup
+                alert(messageContainer.innerText);
+            }
+        });
+    </script>
 </body>
 </html>

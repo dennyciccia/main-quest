@@ -14,7 +14,9 @@
         <button type="submit">Registrati</button>
     </form>
 
-    <p><a onclick="history.back()">Annulla</a></p>
+    {% if next %}
+        <p><a href="{{ next }}">Annulla</a></p>
+    {% endif %}
 
     {% include "footer.html" %}
 </body>
