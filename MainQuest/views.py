@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.forms import AuthenticationForm
 from MainQuest.forms import SearchForm, RegisterForm
@@ -31,7 +32,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            u = None
+            u = g = None
             if request.POST["user_type"] == "acquirente":
                 g = Group.objects.get(name="Acquirenti")
                 u = Acquirente()
@@ -39,13 +40,14 @@ def register(request):
             elif request.POST["user_type"] == "venditore":
                 g = Group.objects.get(name="Venditori")
                 u = Venditore()
+            g.user_set.add(user)
             u.user = user
             u.pk = user.pk
             u.nome = request.POST["username"]
             u.foto_profilo = "imgs/default_profile_image.png"
             u.save()
             messages.success(request, message="Registrazione avvenuta con successo.")
-            return redirect("login")
+            return redirect(reverse("login") + "?next=" + request.GET.get("next"))
     else:
         form = RegisterForm()
     return render(request, template_name="register.html", context={"form": form, "next": request.GET.get("next")})

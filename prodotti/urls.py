@@ -21,4 +21,5 @@ from .views import *
 
 urlpatterns = [
     path("game/<int:pk>", PaginaNegozio.as_view(), name="pagina_negozio"),
+    path("ordine/<int:pk>", ordine, name="ordine"),
 ]

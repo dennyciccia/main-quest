@@ -9,7 +9,7 @@
     
     <h2>Registrati</h2>
 
-    <form method="POST"> {% csrf_token %}
+    <form method="POST" action="{% url "register" %}?next={{ next }}"> {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Registrati</button>
     </form>
