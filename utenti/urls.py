@@ -22,4 +22,7 @@ from .views import *
 urlpatterns = [
     path("utente/<int:pk>", ProfiloAcquirente.as_view(), name="profilo_acquirente"),
     path("venditore/<int:pk>", ProfiloVenditore.as_view(), name="profilo_venditore"),
+
+    path("utente/modifica_profilo/<int:pk>", modifica_profilo_acquirente, name="modifica_profilo_acquirente"),
+    path("utente/elimina_account/<int:pk>", elimina_account, name="elimina_account"),
 ]

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica profilo</title>
+</head>
+<body>
+    <h1>Main Quest</h1>
+
+    <h2>Modifica profilo</h2>
+
+    <form method="POST" action="{% url "modifica_profilo_acquirente" user.acquirente_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salva modifiche</button>
+    </form>
+
+    <a href="{{ next }}">Annulla</a>
+</body>
+</html>

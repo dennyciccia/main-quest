@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from .initcmds import erase_db, init_db
 from .views import *
 
@@ -31,6 +33,9 @@ urlpatterns = [
     path("prodotti/", include("prodotti.urls")),
     path("utenti/", include("utenti.urls"))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #erase_db()
 init_db()

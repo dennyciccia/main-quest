@@ -40,6 +40,7 @@ def register(request):
                 g = Group.objects.get(name="Venditori")
                 u = Venditore()
             u.user = user
+            u.pk = user.pk
             u.nome = request.POST["username"]
             u.foto_profilo = "imgs/default_profile_image.png"
             u.save()
