@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, UpdateView
 from MainQuest.forms import SearchForm
 from utenti.forms import ModificaProfiloAcquirenteForm
-from utenti.models import Acquirente, Venditore
+from utenti.models import Acquirente, Venditore, CustomUser
 
 
 # Create your views here.
@@ -27,6 +29,7 @@ class ProfiloAcquirente(DetailView):
         return context
 
 
+@login_required(login_url="login")
 def modifica_profilo_acquirente(request, pk):
     user = request.user
     acquirente = request.user.acquirente_profile
@@ -59,5 +62,14 @@ class ProfiloVenditore(DetailView):
         return context
 
 
-def elimina_account(request):
+@login_required(login_url="login")
+def elimina_account(request, pk):
     if request.GET.get("commit"):
+        # elimina
+        user = CustomUser.objects.get(pk=pk)
+        user.delete()
+        messages.success(request, message="Utente eliminato.")
+        return redirect("home")
+
+    # chiedi conferma eliminazione
+    return render(request, template_name="utenti/conferma_eliminazione_account.html", context={"next": request.GET.get("next")})

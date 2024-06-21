@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Elimina account</title>
+</head>
+<body>
+    <h1>Eliminazione account</h1>
+    
+    <p>Vuoi davvero eliminare il tuo account?</p>
+    <p>Verranno eliminate tutte le informazioni, compresi i prodotti acquistati.</p>
+    <p>L'operazione è irreversibile.</p>
+
+    <a href="{{ next }}"><button type="button">Annulla</button></a>
+    <a href="{% url "elimina_account" user.pk %}?commit=True"><button type="button">Conferma</button></a>
+</body>
+</html>
