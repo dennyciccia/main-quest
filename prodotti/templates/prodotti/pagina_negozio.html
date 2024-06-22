@@ -46,13 +46,17 @@
     {% endfor %}
     
     <h3>Recensioni</h3>
-    {% if user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all %}
+    {% if user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all and not user_ha_scritto_recensione %}
         <a href="{% url "scrivi_recensione" prodotto.pk %}"><button>Scrivi recensione</button></a>
     {% endif %}
     {% for r in prodotto.recensioni.all %}
         <p><strong>Utente: <a href="{% url "profilo_acquirente" r.utente.pk %}">{{ r.utente.nome }}</a>, Voto: {{ r.voto }}</strong></p>
         <p>Pubblicata il {{ r.data_pubblicazione }}</p>
         <p>{{ r.testo }}</p>
+        {% if r in user.acquirente_profile.recensioni.all %}
+            <a href="{% url "modifica_recensione" r.pk %}"><button>Modifica</button></a>
+            <a href="{% url "elimina_recensione" r.pk %}"><button>Elimina</button></a>
+        {% endif %}
     {% endfor %}
 
     {% if next %}

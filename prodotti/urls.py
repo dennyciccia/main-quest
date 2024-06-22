@@ -21,5 +21,7 @@ from .views import *
 urlpatterns = [
     path("game/<int:pk>", PaginaNegozio.as_view(), name="pagina_negozio"),
     path("ordine/<int:pk>", ordine, name="ordine"),
-    path("recensione/<int:pk>", CreaRecensione.as_view(), name="scrivi_recensione"),
+    path("recensione/pubblica/<int:pk>", CreaRecensione.as_view(), name="scrivi_recensione"),
+    path("recensione/modifica/<int:pk>", ModificaRecensione.as_view(), name="modifica_recensione"),
+    path("recensione/elimina/<int:pk>", elimina_recensione, name="elimina_recensione"),
 ]

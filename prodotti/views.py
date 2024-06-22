@@ -1,9 +1,9 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
 from prodotti.forms import OrdineForm, CreaRecensioneForm
 from prodotti.models import Prodotto, Recensione
@@ -32,6 +32,13 @@ class PaginaNegozio(DetailView):
         # inizializzo il form per la ricerca
         form = SearchForm()
         context["search_form"] = form
+        # controlla se l'utente può scrivere la recensione
+        flag = False
+        if self.request.user.acquirente_profile:
+            for r in self.object.recensioni.all():
+                if self.request.user.acquirente_profile == r.utente:
+                    flag = True
+        context["user_ha_scritto_recensione"] = flag
         return context
 
 
@@ -71,3 +78,16 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+
+
+class ModificaRecensione(GroupRequiredMixin, UpdateView):
+    group_required = ["Acquirenti"]
+
+
+@login_required(login_url="login")
+def elimina_recensione(request, pk):
+    recensione = Recensione.objects.get(pk=pk)
+    prodotto = recensione.prodotto
+    recensione.delete()
+    messages.success(request, message="Recensione eliminata.")
+    return redirect(reverse("pagina_negozio", kwargs={"pk": prodotto.pk}))
