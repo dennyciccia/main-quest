@@ -11,18 +11,7 @@ class OrdineForm(forms.Form):
     cvv = forms.CharField(label="CVV", min_length=3, max_length=3)
 
 
-class CreaRecensioneForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["voto"].validators.append(MinValueValidator(0))
-        self.fields["voto"].validators.append(MaxValueValidator(10))
-
-    class Meta:
-        model = Recensione
-        fields = ("voto", "testo")
-
-
-class ModificaRecensioneForm(forms.ModelForm):
+class RecensioneForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["voto"].validators.append(MinValueValidator(0))

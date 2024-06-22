@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
-from prodotti.forms import OrdineForm, CreaRecensioneForm
+from prodotti.forms import OrdineForm, RecensioneForm
 from prodotti.models import Prodotto, Recensione
 from utenti.models import Acquirente
 from braces.views import GroupRequiredMixin
@@ -60,7 +60,7 @@ def ordine(request, pk):
 class CreaRecensione(GroupRequiredMixin, CreateView):
     group_required = ["Acquirenti"]
     model = Recensione
-    form_class = CreaRecensioneForm
+    form_class = RecensioneForm
     template_name = "prodotti/scrivi_recensione.html"
 
     def get_context_data(self, **kwargs):
@@ -83,7 +83,7 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
 class ModificaRecensione(GroupRequiredMixin, UpdateView):
     group_required = ["Acquirenti"]
     model = Recensione
-    form_class = CreaRecensioneForm
+    form_class = RecensioneForm
     template_name = "prodotti/modifica_recensione.html"
 
     def get_context_data(self, **kwargs):
