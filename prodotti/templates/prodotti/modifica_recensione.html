@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica recensione</title>
+</head>
+<body>
+    <h1>Modifica recensione di {{ prodotto.titolo }}</h1>
+    
+    <form method="POST" action="{% url "modifica_recensione" recensione.pk %}"> {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Modifica</button>
+        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+    </form>
+</body>
+</html>

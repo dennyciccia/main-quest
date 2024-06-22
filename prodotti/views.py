@@ -34,7 +34,7 @@ class PaginaNegozio(DetailView):
         context["search_form"] = form
         # controlla se l'utente può scrivere la recensione
         flag = False
-        if self.request.user.acquirente_profile:
+        if hasattr(self.request.user, "acquirente_profile"):
             for r in self.object.recensioni.all():
                 if self.request.user.acquirente_profile == r.utente:
                     flag = True
@@ -82,6 +82,18 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
 
 class ModificaRecensione(GroupRequiredMixin, UpdateView):
     group_required = ["Acquirenti"]
+    model = Recensione
+    form_class = CreaRecensioneForm
+    template_name = "prodotti/modifica_recensione.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["prodotto"] = Prodotto.objects.get(pk=self.object.prodotto.pk)
+        return context
+
+    def get_success_url(self):
+        prodotto = self.get_context_data()["prodotto"]
+        return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
 @login_required(login_url="login")
