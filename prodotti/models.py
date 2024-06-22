@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from utenti.models import Venditore, Acquirente
 
@@ -25,7 +26,7 @@ class Immagine(models.Model):
 
 class Recensione(models.Model):
     testo = models.TextField(blank=True)
-    voto = models.DecimalField(decimal_places=1, max_digits=10)
+    voto = models.DecimalField(decimal_places=1, max_digits=3, validators=[MinValueValidator(0), MaxValueValidator(10)])
     data_pubblicazione = models.DateField()
     utente = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="recensioni")
     prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="recensioni")

@@ -1,11 +1,14 @@
+from django.urls import reverse_lazy
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from MainQuest.forms import SearchForm
-from prodotti.forms import OrdineForm
-from prodotti.models import Prodotto
+from prodotti.forms import OrdineForm, CreaRecensioneForm
+from prodotti.models import Prodotto, Recensione
 from utenti.models import Acquirente
+from braces.views import GroupRequiredMixin
 
 
 # Create your views here.
@@ -31,6 +34,7 @@ class PaginaNegozio(DetailView):
         context["search_form"] = form
         return context
 
+
 @group_required("Acquirenti")
 def ordine(request, pk):
     prodotto = Prodotto.objects.get(pk=pk)
@@ -44,3 +48,26 @@ def ordine(request, pk):
     else:
         form = OrdineForm()
     return render(request, template_name="prodotti/ordine.html", context={"form": form, "prodotto": prodotto})
+
+
+class CreaRecensione(GroupRequiredMixin, CreateView):
+    group_required = ["Acquirenti"]
+    model = Recensione
+    form_class = CreaRecensioneForm
+    template_name = "prodotti/scrivi_recensione.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["prodotto"] = Prodotto.objects.get(pk=self.kwargs["pk"])
+        return context
+
+    def form_valid(self, form):
+        form.instance.data_pubblicazione = timezone.now().date()
+        form.instance.utente = self.request.user.acquirente_profile
+        form.instance.prodotto = Prodotto.objects.get(pk=self.kwargs['pk'])
+        response = super().form_valid(form)
+        messages.success(self.request, message="Recensione pubblicata.")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})

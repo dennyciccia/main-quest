@@ -17,7 +17,6 @@
     {% endfor %}
     
     <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
-    <p>Editore: <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
     <p>Sviluppatore: <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
     
     <p>
@@ -29,7 +28,7 @@
             {% elif user.is_authenticated %}
                 <a href="{% url "ordine" prodotto.pk %}"><button>Acquista</button></a>
             {% else %}
-                <a href="{% url "login" %}?next={{ request.path }}">Accedi</a>  per acquistare
+                <a href="{% url "login" %}?next={{ request.path }}">Accedi</a> per acquistare
             {% endif %}
         {% endif %}
     </p>
@@ -47,6 +46,9 @@
     {% endfor %}
     
     <h3>Recensioni</h3>
+    {% if user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all %}
+        <a href="{% url "scrivi_recensione" prodotto.pk %}"><button>Scrivi recensione</button></a>
+    {% endif %}
     {% for r in prodotto.recensioni.all %}
         <p><strong>Utente: <a href="{% url "profilo_acquirente" r.utente.pk %}">{{ r.utente.nome }}</a>, Voto: {{ r.voto }}</strong></p>
         <p>Pubblicata il {{ r.data_pubblicazione }}</p>
