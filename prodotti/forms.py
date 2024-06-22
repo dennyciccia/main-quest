@@ -26,3 +26,9 @@ class CreaDomandaForm(forms.ModelForm):
     class Meta:
         model = Domanda
         fields = ("testo",)
+
+
+class RispondiDomandaForm(forms.ModelForm):
+    class Meta:
+        model = Domanda
+        fields = ("risposta",)

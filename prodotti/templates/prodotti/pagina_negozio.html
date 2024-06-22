@@ -43,7 +43,7 @@
         <p><strong><a href="{% url "profilo_acquirente" d.utente.pk %}">{{ d.utente.nome}}</a>: {{ d.testo }}</strong></p>
         {% if d.risposta != "" %}
             <p><a href="{% url "profilo_acquirente" d.utente_risposta.pk %}">{{ d.utente_risposta.nome }}</a>: {{ d.risposta }}</p>
-        {% elif user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all or user.venditore_profile.type == "venditore" and prodotto in user.venditore_profile.prodotti.all %}
+        {% elif user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all %}
             <a href="{% url "rispondi_domanda" d.pk %}"><button>Rispondi</button></a>
         {% endif %}
     {% endfor %}
@@ -67,26 +67,5 @@
     {% endif %}
     
     {% include "footer.html" %}
-    
-    <!-- parte del messaggio di conferma avvenuto o non avvenuto acquisto -->
-    {% if messages %}
-        <div id="message-container">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <script>
-        // chiama la funzione quando viene caricato il contenuto del DOM
-        document.addEventListener("DOMContentLoaded", function() {
-            const messageContainer = document.getElementById('message-container');
-            if (messageContainer) {
-                // Mostra il message-container come popup e poi eliminalo
-                alert(messageContainer.innerText);
-                messageContainer.remove();
-            }
-        });
-    </script>
     
 {% endblock %}

@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
-from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm
+from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm, RispondiDomandaForm
 from prodotti.models import Prodotto, Recensione, Domanda
 from utenti.models import Acquirente
-from braces.views import GroupRequiredMixin
+from braces.views import GroupRequiredMixin, LoginRequiredMixin
 
 
 # Create your views here.
@@ -126,5 +126,27 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
-class RispondiDomanda(UpdateView):
-    pass
+class RispondiDomanda(LoginRequiredMixin, UpdateView):
+    login_url = "login"
+    model = Domanda
+    form_class = RispondiDomandaForm
+    template_name = "prodotti/rispondi_domanda.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["prodotto"] = Prodotto.objects.get(pk=self.object.prodotto.pk)
+        return context
+
+    def form_valid(self, form):
+        if hasattr(self.request.user, "acquirente_profile"):
+            utente_risposta = self.request.user.acquirente_profile
+        elif hasattr(self.request.user, "venditore_profile"):
+            utente_risposta = self.request.user.venditore_profile
+        form.instance.utente_risposta = utente_risposta
+        response = super().form_valid(form)
+        messages.success(self.request, message="Risposta pubblicata.")
+        return response
+
+    def get_success_url(self):
+        prodotto = self.get_context_data()["prodotto"]
+        return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})

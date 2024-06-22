@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Rispondi a una domanda</title>
+</head>
+<body>
+    <h1>Rispondi a una domanda su {{ prodotto.titolo }}</h1>
+    
+    <p>Domanda: {{ domanda.testo }}</p>
+    
+    <form method="POST" action="{% url "rispondi_domanda" domanda.pk %}"> {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Rispondi</button>
+        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+    </form>
+</body>
+</html>
