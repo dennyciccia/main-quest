@@ -1,7 +1,7 @@
 from datetime import date
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
-from prodotti.models import Recensione
+from prodotti.models import Recensione, Domanda
 
 
 class OrdineForm(forms.Form):
@@ -20,3 +20,9 @@ class RecensioneForm(forms.ModelForm):
     class Meta:
         model = Recensione
         fields = ("voto", "testo")
+
+
+class CreaDomandaForm(forms.ModelForm):
+    class Meta:
+        model = Domanda
+        fields = ("testo",)

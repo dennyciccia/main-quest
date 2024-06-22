@@ -36,9 +36,9 @@ class Recensione(models.Model):
 
 class Domanda(models.Model):
     testo = models.CharField(max_length=500)
-    risposta = models.CharField(max_length=500, blank=True)
+    risposta = models.CharField(max_length=500, default="", blank=True)
     utente = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="domande")
-    utente_risposta = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="risposte")
+    utente_risposta = models.ForeignKey(Acquirente, default=None, null=True, on_delete=models.SET_NULL, related_name="risposte")
     prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="domande")
 
     class Meta:

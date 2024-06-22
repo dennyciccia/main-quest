@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
-from prodotti.forms import OrdineForm, RecensioneForm
-from prodotti.models import Prodotto, Recensione
+from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm
+from prodotti.models import Prodotto, Recensione, Domanda
 from utenti.models import Acquirente
 from braces.views import GroupRequiredMixin
 
@@ -103,3 +103,28 @@ def elimina_recensione(request, pk):
     recensione.delete()
     messages.success(request, message="Recensione eliminata.")
     return redirect(reverse("pagina_negozio", kwargs={"pk": prodotto.pk}))
+
+
+class CreaDomanda(GroupRequiredMixin, CreateView):
+    group_required = ["Acquirenti"]
+    model = Domanda
+    form_class = CreaDomandaForm
+    template_name = "prodotti/fai_domanda.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["prodotto"] = Prodotto.objects.get(pk=self.kwargs["pk"])
+        return context
+
+    def form_valid(self, form):
+        form.instance.utente = self.request.user.acquirente_profile
+        form.instance.prodotto = Prodotto.objects.get(pk=self.kwargs['pk'])
+        response = super().form_valid(form)
+        messages.success(self.request, message="Domanda pubblicata.")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+
+class RispondiDomanda(UpdateView):
+    pass

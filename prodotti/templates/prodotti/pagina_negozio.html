@@ -36,12 +36,15 @@
     <p>Requisiti: {{ prodotto.requisiti }}</p>
     
     <h3>Domande</h3>
+    {% if user.acquirente_profile.type == "acquirente" %}
+        <a href="{% url "fai_domanda" prodotto.pk %}"><button>Fai una domanda</button></a>
+    {% endif %}
     {% for d in prodotto.domande.all %}
         <p><strong><a href="{% url "profilo_acquirente" d.utente.pk %}">{{ d.utente.nome}}</a>: {{ d.testo }}</strong></p>
         {% if d.risposta != "" %}
             <p><a href="{% url "profilo_acquirente" d.utente_risposta.pk %}">{{ d.utente_risposta.nome }}</a>: {{ d.risposta }}</p>
-        {% elif user.is_authenticated %}
-            <button>Rispondi</button>
+        {% elif user.acquirente_profile.type == "acquirente" and prodotto in user.acquirente_profile.prodotti.all or user.venditore_profile.type == "venditore" and prodotto in user.venditore_profile.prodotti.all %}
+            <a href="{% url "rispondi_domanda" d.pk %}"><button>Rispondi</button></a>
         {% endif %}
     {% endfor %}
     
