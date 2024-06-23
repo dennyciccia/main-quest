@@ -9,11 +9,11 @@
 
     <h2>Modifica profilo</h2>
 
-    <form method="POST" action="{% url "modifica_profilo_acquirente" user.acquirente_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
+    <form method="POST" action="{% url "modifica_profilo_venditore" user.venditore_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Salva modifiche</button>
     </form>
 
-    <a href="{% url "profilo_acquirente" user_id %}">Annulla</a>
+    <a href="{% url "profilo_venditore" user_id %}">Annulla</a>
 </body>
 </html>

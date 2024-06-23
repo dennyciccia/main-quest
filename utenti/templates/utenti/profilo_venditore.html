@@ -8,7 +8,7 @@
     
     <h2>{{ object.nome }}</h2>
     
-    <img src="{% static object.foto_profilo %}" alt="foto profilo" width="180" height="180">
+    <img src="{% static object.foto_profilo.url %}" alt="foto profilo" width="180" height="180">
     
     <h3>Giochi pubblicati:</h3>
     <ul>
@@ -16,6 +16,14 @@
         <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
     {% endfor %}
     </ul>
+    
+    {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
+        <a href="{% url "modifica_profilo_venditore" user_id %}?next={{ request.path }}"><button type="button">Modifica profilo</button></a>
+    {% endif %}
+    
+    {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
+        <a href="{% url "elimina_account" user_id %}?next={{ request.path }}"><button type="button">Elimina account</button></a>
+    {% endif %}
     
     {% if next %}
         <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>

@@ -13,7 +13,7 @@
     <p>Genere: {{ prodotto.genere }}</p>
     
     {% for img in prodotto.immagini.all %}
-        <img src="{% static img.img %}" alt="{{ img.testo_alternativo }}" width="247" height="192">
+        <img src="{% static img.img.url %}" alt="{{ img.testo_alternativo }}" width="247" height="192">
     {% endfor %}
     
     <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
