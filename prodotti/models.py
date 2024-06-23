@@ -6,23 +6,16 @@ from utenti.models import Venditore, Acquirente
 class Prodotto(models.Model):
     titolo = models.CharField(max_length=100)
     descrizione = models.TextField()
-    prezzo = models.DecimalField(decimal_places=2, max_digits=10)
+    genere = models.CharField(max_length=50)
+    prezzo = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
     requisiti = models.CharField(max_length=500)
     data_rilascio = models.DateField()
-    genere = models.CharField(max_length=50)
+    immagine = models.ImageField(upload_to="game_images/", default="imgs/placeholder_image.png")
     venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE, related_name="prodotti")
     acquirenti = models.ManyToManyField(Acquirente, related_name="prodotti")
 
     class Meta:
         verbose_name_plural = "Prodotti"
-
-class Immagine(models.Model):
-    img = models.ImageField()
-    testo_alternativo = models.CharField(max_length=100)
-    prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="immagini")
-
-    class Meta:
-        verbose_name_plural = "Immagini"
 
 class Recensione(models.Model):
     testo = models.TextField(blank=True)

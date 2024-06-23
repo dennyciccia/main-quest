@@ -18,6 +18,12 @@
     </ul>
     
     {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
+        <a href="{% url "pubblica_prodotto" %}"><button type="button">Pubblica prodotto</button></a>
+    {% endif %}
+    
+    <br/>
+    
+    {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
         <a href="{% url "modifica_profilo_venditore" user_id %}?next={{ request.path }}"><button type="button">Modifica profilo</button></a>
     {% endif %}
     

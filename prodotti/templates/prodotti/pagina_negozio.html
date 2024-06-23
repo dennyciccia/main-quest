@@ -8,13 +8,15 @@
     
     <h2>{{ prodotto.titolo }}</h2>
     
+    {% if prodotto.venditore == user.venditore_profile %}
+        <a href="{% url "elimina_prodotto" prodotto.pk %}"><button type="button">Elimina prodotto</button></a>
+    {% endif %}
+    
     <p>{{ prodotto.descrizione }}</p>
     
     <p>Genere: {{ prodotto.genere }}</p>
     
-    {% for img in prodotto.immagini.all %}
-        <img src="{% static img.img.url %}" alt="{{ img.testo_alternativo }}" width="247" height="192">
-    {% endfor %}
+    <img src="{% static prodotto.immagine.url %}" alt="immagine di gioco" width="247" height="192">
     
     <p>Data di rilascio: {{ prodotto.data_rilascio }}</p>
     <p>Sviluppatore: <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>

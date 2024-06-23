@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
-from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm, RispondiDomandaForm
+from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm, RispondiDomandaForm, ProdottoForm
 from prodotti.models import Prodotto, Recensione, Domanda
-from utenti.models import Acquirente
-from braces.views import GroupRequiredMixin, LoginRequiredMixin
+from utenti.models import Acquirente, Venditore
+from braces.views import GroupRequiredMixin
 
 
 # Create your views here.
@@ -126,8 +126,8 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
-class RispondiDomanda(LoginRequiredMixin, UpdateView):
-    login_url = "login"
+class RispondiDomanda(GroupRequiredMixin, UpdateView):
+    group_required = ["Acquirenti"]
     model = Domanda
     form_class = RispondiDomandaForm
     template_name = "prodotti/rispondi_domanda.html"
@@ -144,9 +144,35 @@ class RispondiDomanda(LoginRequiredMixin, UpdateView):
             utente_risposta = self.request.user.venditore_profile
         form.instance.utente_risposta = utente_risposta
         response = super().form_valid(form)
-        messages.success(self.request, message="Risposta pubblicata.")
+        messages.success(self.request, message="Prodotto pubblicato con successo.")
         return response
 
     def get_success_url(self):
         prodotto = self.get_context_data()["prodotto"]
         return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})
+
+
+class PubblicaProdotto(GroupRequiredMixin, CreateView):
+    group_required = ["Venditori"]
+    model = Prodotto
+    form_class = ProdottoForm
+    template_name = "prodotti/crea_prodotto.html"
+
+    def form_valid(self, form):
+        form.instance.data_rilascio = timezone.now().date()
+        form.instance.venditore = self.request.user.venditore_profile
+        response = super().form_valid(form)
+        messages.success(self.request, message="Risposta pubblicata.")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})
+
+
+@login_required(login_url="login")
+def elimina_prodotto(request, pk):
+    prodotto = Prodotto.objects.get(pk=pk)
+    venditore = Venditore.objects.get(pk=prodotto.venditore.pk)
+    prodotto.delete()
+    messages.success(request, message="Prodotto eliminato.")
+    return redirect(reverse("profilo_venditore", kwargs={"pk": venditore.pk}))

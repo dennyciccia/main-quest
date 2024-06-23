@@ -1,4 +1,4 @@
-from prodotti.models import Prodotto, Recensione, Domanda, Immagine
+from prodotti.models import Prodotto, Recensione, Domanda
 from utenti.models import CustomUser, Acquirente, Venditore
 from datetime import date
 from django.contrib.auth.hashers import make_password
@@ -9,7 +9,6 @@ def erase_db():
     Acquirente.objects.all().delete()
     Venditore.objects.all().delete()
     Prodotto.objects.all().delete()
-    Immagine.objects.all().delete()
     Recensione.objects.all().delete()
     Domanda.objects.all().delete()
     #il resto si cancella in automatico
@@ -122,7 +121,7 @@ def init_db():
                 p.save()
                 p.acquirenti.add(*(Acquirente.objects.filter(nome__in=prodottidict[k][i])))
         p.save()
-
+    """
     for i in range(len(immaginidict["imgs"])):
         img = Immagine()
         for k in immaginidict:
@@ -133,7 +132,7 @@ def init_db():
             if k == "prodotti":
                 img.prodotto = Prodotto.objects.filter(titolo__iexact=immaginidict[k][i]).first()
         img.save()
-
+    """
     for i in range(len(recensionidict["testi"])):
         r = Recensione()
         for k in recensionidict:
@@ -170,6 +169,5 @@ def init_db():
     print(Acquirente.objects.all())
     print(Venditore.objects.all())
     print(Prodotto.objects.all())
-    print(Immagine.objects.all())
     print(Recensione.objects.all())
     print(Domanda.objects.all())

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Pubblica prodotto</title>
+</head>
+<body>
+    <h1>Pubblica un prodotto</h1>
+    
+    <form method="POST" action="{% url "pubblica_prodotto" %}"> {% csrf_token %}
+        {{ form.as_p }}
+        {{ immagine_formset.management_form }}
+        {% for form in immagine_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+        <button type="submit">Pubblica</button>
+        <a href="{% url "profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
+    </form>
+</body>
+</html>
