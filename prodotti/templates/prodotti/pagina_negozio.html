@@ -9,6 +9,7 @@
     <h2>{{ prodotto.titolo }}</h2>
     
     {% if prodotto.venditore == user.venditore_profile %}
+        <a href="{% url "modifica_prodotto" prodotto.pk %}"><button type="button">Modifica prodotto</button></a>
         <a href="{% url "elimina_prodotto" prodotto.pk %}"><button type="button">Elimina prodotto</button></a>
     {% endif %}
     

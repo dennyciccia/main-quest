@@ -162,8 +162,20 @@ class PubblicaProdotto(GroupRequiredMixin, CreateView):
         form.instance.data_rilascio = timezone.now().date()
         form.instance.venditore = self.request.user.venditore_profile
         response = super().form_valid(form)
-        messages.success(self.request, message="Risposta pubblicata.")
+        messages.success(self.request, message="Prodotto pubblicato.")
         return response
+
+    def get_success_url(self):
+        return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})
+
+
+class ModificaProdotto(GroupRequiredMixin, UpdateView):
+    group_required = ["Venditori"]
+    model = Prodotto
+    form_class = ProdottoForm
+    template_name = "prodotti/modifica_prodotto.html"
+
+
 
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})

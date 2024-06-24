@@ -30,7 +30,7 @@ class ModificaProfiloForm(forms.ModelForm):
         if password1 is not None and password1 != password2:
             self.add_error("password2", "Le password non corrispondono")
 
-        if CustomUser.objects.get(username=cleaned_data.get("username")) is not None:
+        if CustomUser.objects.filter(username__iexact=cleaned_data.get("username")).exclude(pk=self.instance.user.pk).exists():
             self.add_error("username", "Nome utente non disponibile")
 
     # aggiorna le informazioni
