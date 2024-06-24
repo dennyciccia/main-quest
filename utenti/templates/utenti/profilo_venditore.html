@@ -28,7 +28,7 @@
     {% endif %}
     
     {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
-        <a href="{% url "elimina_account" user_id %}?next={{ request.path }}"><button type="button">Elimina account</button></a>
+        <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button">Elimina account</button></a>
     {% endif %}
     
     {% if next %}

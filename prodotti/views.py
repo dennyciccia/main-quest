@@ -1,23 +1,17 @@
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
 from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm, RispondiDomandaForm, ProdottoForm
 from prodotti.models import Prodotto, Recensione, Domanda
-from utenti.models import Acquirente, Venditore
+from utenti.models import Venditore
 from braces.views import GroupRequiredMixin
+from MainQuest.views import group_required
 
 
 # Create your views here.
-
-def group_required(group_name):
-    def in_group(user):
-        return user.is_authenticated and user.groups.filter(name=group_name).exists()
-    return user_passes_test(in_group, login_url="login")
-
 
 class PaginaNegozio(DetailView):
     model = Prodotto
@@ -44,24 +38,48 @@ class PaginaNegozio(DetailView):
 
 @group_required("Acquirenti")
 def ordine(request, pk):
-    prodotto = Prodotto.objects.get(pk=pk)
+    prodotto = get_object_or_404(Prodotto, pk=pk)
+    acquirente = request.user.acquirente_profile
+
+    # controllo se l'acquirente possiede già il prodotto
+    if prodotto.acquirenti.filter(pk=acquirente.pk).exists():
+        messages.error(request, "Hai già acquistato questo prodotto.")
+        return redirect("pagina_negozio", pk=pk)
+
     if request.method == "POST":
         form = OrdineForm(request.POST)
         if form.is_valid():
-            acquirente = Acquirente.objects.get(pk=request.user.acquirente_profile.pk)
             prodotto.acquirenti.add(acquirente)
             messages.success(request, message="Prodotto acquistato con successo.")
             return redirect("pagina_negozio", pk=pk)
     else:
         form = OrdineForm()
+
     return render(request, template_name="prodotti/ordine.html", context={"form": form, "prodotto": prodotto})
 
 
 class CreaRecensione(GroupRequiredMixin, CreateView):
     group_required = ["Acquirenti"]
+    login_url = reverse_lazy("login")
     model = Recensione
     form_class = RecensioneForm
     template_name = "prodotti/scrivi_recensione.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        prodotto = get_object_or_404(Prodotto, pk=kwargs["pk"])
+        acquirente = request.user.acquirente_profile
+
+        # controllo che l'acquirente non possiede il prodotto
+        if not prodotto.acquirenti.filter(pk=acquirente.pk).exists():
+            messages.error(request, "Non hai acquistato questo prodotto.")
+            return redirect("pagina_negozio", pk=prodotto.pk)
+
+        # controllo che l'acquirente non abbia già scritto una recensione
+        if prodotto.recensioni.filter(utente=acquirente).exists():
+            messages.error(request, "Hai già scritto una recensione per questo prodotto.")
+            return redirect("pagina_negozio", pk=prodotto.pk)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -82,9 +100,21 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
 
 class ModificaRecensione(GroupRequiredMixin, UpdateView):
     group_required = ["Acquirenti"]
+    login_url = reverse_lazy("login")
     model = Recensione
     form_class = RecensioneForm
     template_name = "prodotti/modifica_recensione.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        recensione = get_object_or_404(Recensione, pk=kwargs["pk"])
+        acquirente = request.user.acquirente_profile
+
+        # controllo che l'acquirente abbia scritto la recensione
+        if not recensione.utente == acquirente:
+            messages.error(request, "Non hai scritto questa recensione.")
+            return redirect("pagina_negozio", pk=recensione.prodotto.pk)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,17 +126,25 @@ class ModificaRecensione(GroupRequiredMixin, UpdateView):
         return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
-@login_required(login_url="login")
+@group_required("Acquirenti")
 def elimina_recensione(request, pk):
-    recensione = Recensione.objects.get(pk=pk)
+    recensione = get_object_or_404(Recensione, pk=pk)
     prodotto = recensione.prodotto
+
+    # controllo che l'utente abbia scritto la recensione
+    if request.user.acquirente_profile != recensione.utente:
+        messages.error(request, "Non hai scritto questa recensione.")
+        return redirect("pagina_negozio", pk=prodotto.pk)
+
     recensione.delete()
     messages.success(request, message="Recensione eliminata.")
+
     return redirect(reverse("pagina_negozio", kwargs={"pk": prodotto.pk}))
 
 
 class CreaDomanda(GroupRequiredMixin, CreateView):
     group_required = ["Acquirenti"]
+    login_url = reverse_lazy("login")
     model = Domanda
     form_class = CreaDomandaForm
     template_name = "prodotti/fai_domanda.html"
@@ -126,11 +164,25 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
+
 class RispondiDomanda(GroupRequiredMixin, UpdateView):
     group_required = ["Acquirenti"]
+    login_url = reverse_lazy("login")
     model = Domanda
     form_class = RispondiDomandaForm
     template_name = "prodotti/rispondi_domanda.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        domanda = get_object_or_404(Domanda, pk=self.kwargs["pk"])
+        prodotto = domanda.prodotto
+        acquirente = request.user.acquirente_profile
+
+        # controllo se l'acquirente possiede il prodotto
+        if not prodotto.acquirenti.filter(pk=acquirente.pk).exists():
+            messages.error(request, "Non hai acquistato questo prodotto.")
+            return redirect("pagina_negozio", pk=prodotto.pk)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -138,13 +190,9 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        if hasattr(self.request.user, "acquirente_profile"):
-            utente_risposta = self.request.user.acquirente_profile
-        elif hasattr(self.request.user, "venditore_profile"):
-            utente_risposta = self.request.user.venditore_profile
-        form.instance.utente_risposta = utente_risposta
+        form.instance.utente_risposta = self.request.user.acquirente_profile
         response = super().form_valid(form)
-        messages.success(self.request, message="Prodotto pubblicato con successo.")
+        messages.success(self.request, message="Risposta pubblicata con successo.")
         return response
 
     def get_success_url(self):
@@ -154,6 +202,7 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
 
 class PubblicaProdotto(GroupRequiredMixin, CreateView):
     group_required = ["Venditori"]
+    login_url = reverse_lazy("login")
     model = Prodotto
     form_class = ProdottoForm
     template_name = "prodotti/crea_prodotto.html"
@@ -171,20 +220,36 @@ class PubblicaProdotto(GroupRequiredMixin, CreateView):
 
 class ModificaProdotto(GroupRequiredMixin, UpdateView):
     group_required = ["Venditori"]
+    login_url = reverse_lazy("login")
     model = Prodotto
     form_class = ProdottoForm
     template_name = "prodotti/modifica_prodotto.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        prodotto = get_object_or_404(Prodotto, pk=self.kwargs["pk"])
+        venditore = request.user.venditore_profile
 
+        # controllo se il venditore è il proprietario del prodotto
+        if prodotto.venditore != venditore:
+            messages.error(request, "Non sei il proprietario di questo prodotto.")
+            return redirect("pagina_negozio", pk=prodotto.pk)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})
 
 
-@login_required(login_url="login")
+@group_required("Venditori")
 def elimina_prodotto(request, pk):
-    prodotto = Prodotto.objects.get(pk=pk)
-    venditore = Venditore.objects.get(pk=prodotto.venditore.pk)
+    prodotto = get_object_or_404(Prodotto, pk=pk)
+    venditore = request.user.venditore_profile
+
+    # controllo se il venditore è il proprietario del prodotto
+    if prodotto.venditore != venditore:
+        messages.error(request, "Non sei il proprietario di questo prodotto.")
+        return redirect("pagina_negozio", pk=prodotto.pk)
+
     prodotto.delete()
     messages.success(request, message="Prodotto eliminato.")
-    return redirect(reverse("profilo_venditore", kwargs={"pk": venditore.pk}))
+    return redirect("profilo_venditore", venditore.pk)

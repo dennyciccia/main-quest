@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
 from django.contrib.auth.forms import AuthenticationForm
 from MainQuest.forms import SearchForm, RegisterForm
@@ -12,6 +12,21 @@ from utenti.models import Acquirente, Venditore
 import django.contrib.auth as dj
 from datetime import timedelta
 from MainQuest.recommendation import recommendations
+
+
+def group_required(group_name):
+    def in_group(user):
+        return user.is_authenticated and user.groups.filter(name=group_name).exists()
+
+    def decorator(view_func):
+        def wrapped_view(request, *args, **kwargs):
+            if not in_group(request.user):
+                messages.error(request, "Per accedere a questa pagina devi essere nel gruppo " + group_name)
+                return redirect("login")
+            return view_func(request, *args, **kwargs)
+        return wrapped_view
+    return decorator
+    #return user_passes_test(in_group, login_url=reverse_lazy("login"))
 
 
 def home(request):
@@ -68,10 +83,10 @@ def login(request):
             return redirect(next_url)
     else:
         form = AuthenticationForm()
-    next_url = request.GET.get("next", '')
+    next_url = request.GET.get("next", '/')
     return render(request, template_name="login.html", context={"form": form, "next": next_url})
 
-@login_required
+@login_required(login_url=reverse_lazy("login"))
 def logout(request):
     dj.logout(request)
     messages.success(request, message="Utente disconnesso.")
