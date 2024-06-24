@@ -19,6 +19,15 @@
         <li><a href="{% url "pagina_negozio" r.pk %}">{{ r.titolo }}</a></li>
     {% endfor %}
     </ul>
+    
+    {% if consigliati is not None %}
+        <h3>Videogiochi consigliati per te</h3>
+        <ul>
+        {% for c in consigliati %}
+            <li><a href="{% url "pagina_negozio" c.pk %}">{{ c.titolo }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 
     {% include "footer.html" %}
     

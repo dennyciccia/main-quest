@@ -11,6 +11,7 @@ from prodotti.models import Prodotto
 from utenti.models import Acquirente, Venditore
 import django.contrib.auth as dj
 from datetime import timedelta
+from MainQuest.recommendation import recommendations
 
 
 def home(request):
@@ -19,11 +20,16 @@ def home(request):
     popolari = Prodotto.objects.annotate(num_acquirenti=Count('acquirenti')).order_by('-num_acquirenti')[:primi_n]
     recenti = Prodotto.objects.filter(data_rilascio__gte=(now() - timedelta(days=30)))
 
-    #inizializzo il form per la ricerca
+    # inizializzo il form per la ricerca
     form = SearchForm()
 
+    # determinazione dei prodotti consigliati con il recommendation system
+    consigliati = None
+    if hasattr(request.user, "acquirente_profile"):
+        consigliati = recommendations(request.user.acquirente_profile, top_n=5)
+
     # definisco il context
-    context = {"title": "Home", "popolari": popolari, "recenti": recenti, "search_form": form}
+    context = {"title": "Home", "popolari": popolari, "recenti": recenti, "search_form": form, "consigliati": consigliati}
 
     return render(request, template_name="home.html", context=context)
 
