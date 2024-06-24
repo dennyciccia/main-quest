@@ -15,6 +15,9 @@ class Acquirente(models.Model):
     def type(self):
         return "acquirente"
 
+    def __str__(self):
+        return f"{self.nome} ({self.pk})"
+
     class Meta:
         verbose_name_plural = "Acquirenti"
 
@@ -25,6 +28,9 @@ class Venditore(models.Model):
 
     def type(self):
         return "venditore"
+
+    def __str__(self):
+        return f"{self.nome} ({self.pk})"
 
     class Meta:
         verbose_name_plural = "Venditori"
