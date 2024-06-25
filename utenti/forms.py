@@ -40,7 +40,8 @@ class ModificaProfiloForm(forms.ModelForm):
         user = utente.user
         user.username = self.cleaned_data["username"]
         user.email = self.cleaned_data["email"]
-        if self.cleaned_data["password1"]: user.set_password(self.cleaned_data["password1"])
+        if self.cleaned_data["password1"]:
+            user.set_password(self.cleaned_data["password1"])
         utente.nome = user.username
         if self.cleaned_data["clear_image"]:
             utente.foto_profilo = "imgs/default_profile_image.png"

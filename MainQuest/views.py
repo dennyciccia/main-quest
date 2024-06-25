@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
+from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
@@ -27,6 +28,21 @@ def group_required(group_name):
         return wrapped_view
     return decorator
     #return user_passes_test(in_group, login_url=reverse_lazy("login"))
+
+
+def trova_risultati(search_terms):
+    # se non vengono specificati search terms non si ottiene nessun risultato
+    if search_terms == "":
+        return {"prodotti": None, "acquirenti": None, "venditori": None, "nessun_risultato": True, "terms": search_terms}
+
+    # ricerca dei risultati
+    prodotti_results = Prodotto.objects.filter(titolo__icontains=search_terms)
+    acquirenti_results = Acquirente.objects.filter(nome__icontains=search_terms)
+    venditori_results = Venditore.objects.filter(nome__icontains=search_terms)
+    nessun_risultato = not prodotti_results.exists() and not acquirenti_results.exists() and not venditori_results.exists()
+    # creazione del context
+    context = {"prodotti": prodotti_results, "acquirenti": acquirenti_results, "venditori": venditori_results, "nessun_risultato": nessun_risultato, "terms": search_terms}
+    return context
 
 
 def home(request):
@@ -93,16 +109,6 @@ def logout(request):
     return redirect("home")
 
 def risultati_ricerca(request):
-    def trova_risultati(st):
-        # ricerca dei risultati
-        prodotti_results = Prodotto.objects.filter(titolo__icontains=st)
-        acquirenti_results = Acquirente.objects.filter(nome__icontains=st)
-        venditori_results = Venditore.objects.filter(nome__icontains=st)
-        nessun_risultato = not prodotti_results.exists() and not acquirenti_results.exists() and not venditori_results.exists()
-        # creazione del context
-        context = {"prodotti": prodotti_results, "acquirenti": acquirenti_results, "venditori": venditori_results, "nessun_risultato": nessun_risultato, "terms": search_terms}
-        return context
-
     if request.method == "POST":
         # istanzio il form con i valori inseriti dall'utente che ora sono nel POST
         form = SearchForm(request.POST)
@@ -120,3 +126,6 @@ def risultati_ricerca(request):
         # ricerca dei risultati
         context = trova_risultati(search_terms)
         return render(request, template_name="risultati_ricerca.html", context=context)
+
+    else:
+        return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")

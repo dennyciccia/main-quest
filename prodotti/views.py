@@ -6,7 +6,6 @@ from django.views.generic import DetailView, CreateView, UpdateView
 from MainQuest.forms import SearchForm
 from prodotti.forms import OrdineForm, RecensioneForm, CreaDomandaForm, RispondiDomandaForm, ProdottoForm
 from prodotti.models import Prodotto, Recensione, Domanda
-from utenti.models import Venditore
 from braces.views import GroupRequiredMixin
 from MainQuest.views import group_required
 
