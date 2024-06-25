@@ -153,3 +153,38 @@ class TrovaRisultatiTest(TestCase):
         self.assertIsNone(risultati["venditori"])
         self.assertTrue(risultati["nessun_risultato"])
         self.assertEqual(risultati["terms"], search_terms)
+
+    def test_trova_risultati_search_terms_con_spazi_bianchi(self):
+        """
+        Caso in cui i search terms hanno spazi bianchi
+        """
+        search_terms = "prodotto di test"
+        risultati = trova_risultati(search_terms)
+
+        self.assertEqual(risultati["prodotti"].count(),1)
+        self.assertEqual(risultati["prodotti"].first(), self.prodotto)
+        self.assertEqual(risultati["acquirenti"].count(),0)
+        self.assertIsNone(risultati["acquirenti"].first())
+        self.assertEqual(risultati["venditori"].count(),0)
+        self.assertIsNone(risultati["venditori"].first())
+        self.assertFalse(risultati["nessun_risultato"])
+        self.assertEqual(risultati["terms"], search_terms)
+
+    def test_trova_risultati_multipli(self):
+        """
+        Caso in cui ci sono risultati multipli per Prodotti, Acquirenti e Venditori
+        """
+        account_acquirente2 = CustomUser.objects.create(username="Acquirente di test - 12 (doppio)", password="password")
+        acquirente2 = Acquirente.objects.create(user=account_acquirente2, nome=self.account_acquirente.username)
+        account_venditore2 = CustomUser.objects.create(username="Venditore di test - 13 (doppio)", password="password")
+        venditore2 = Venditore.objects.create(user=account_venditore2, nome=self.account_venditore.username)
+        prodotto2 = Prodotto.objects.create(titolo="Prodotto di test - 23 (doppio)", prezzo=19.99, data_rilascio=timezone.now().date(), venditore=self.venditore)
+
+        search_terms = "test"
+        risultati = trova_risultati(search_terms)
+
+        self.assertEqual(risultati["prodotti"].count(),2)
+        self.assertEqual(risultati["acquirenti"].count(),2)
+        self.assertEqual(risultati["venditori"].count(),2)
+        self.assertFalse(risultati["nessun_risultato"])
+        self.assertEqual(risultati["terms"], search_terms)
