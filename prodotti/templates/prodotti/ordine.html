@@ -10,7 +10,9 @@
     <p>Totale ordine: {{ prodotto.prezzo }}</p>
     
     <form method="POST" action="{% url "ordine" prodotto.pk %}"> {% csrf_token %}
-        {{ form.as_p }}
+        <table>
+            {{ form.as_table }}
+        </table>
         <button type="submit">Conferma ordine</button>
     </form>
     

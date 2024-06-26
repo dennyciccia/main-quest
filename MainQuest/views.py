@@ -47,9 +47,10 @@ def trova_risultati(search_terms):
 
 def home(request):
     # ottengo le liste dei giochi più popolari e dei giochi più recenti
-    primi_n = 3
+    primi_n = 9
     popolari = Prodotto.objects.annotate(num_acquirenti=Count('acquirenti')).order_by('-num_acquirenti')[:primi_n]
     recenti = Prodotto.objects.filter(data_rilascio__gte=(now() - timedelta(days=30)))
+    recenti = sorted(recenti, key=lambda x: x.data_rilascio, reverse=True)
 
     # inizializzo il form per la ricerca
     form = SearchForm()
@@ -60,7 +61,7 @@ def home(request):
         consigliati = recommendations(request.user.acquirente_profile, top_n=5)
 
     # definisco il context
-    context = {"title": "Home", "popolari": popolari, "recenti": recenti, "search_form": form, "consigliati": consigliati}
+    context = {"title": "Home - MainQuest", "popolari": popolari, "recenti": recenti, "search_form": form, "consigliati": consigliati}
 
     return render(request, template_name="home.html", context=context)
 

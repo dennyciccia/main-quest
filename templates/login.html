@@ -10,9 +10,11 @@
     <h2>Accedi</h2>
 
     <form method="post"> {% csrf_token %}
-        {{ form.as_p }}
+        <table>
+            {{ form.as_table }}
+        </table>
         <input type="hidden" name="next" value="{{ next }}">
-        <button type="submit">Accedi</button>
+        <button type="submit" class="btn btn-success">Accedi</button>
     </form>
 
     {% if next %}

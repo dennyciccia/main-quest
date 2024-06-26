@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from utenti.models import *
 
 class SearchForm(forms.Form):
-    search_terms = forms.CharField(label="Cerca", max_length=100)
+    search_terms = forms.CharField(label="Cerca", max_length=100, widget=forms.TextInput(attrs={"placeholder": "Cerca nel sito"}))
 
 class RegisterForm(UserCreationForm):
     user_type= forms.ChoiceField(

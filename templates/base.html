@@ -1,38 +1,57 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    {% load static %}    
+
     <meta charset="UTF-8">
-    {% block head %} {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>{% block title %} {% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    {% block head %} {% endblock %}
 </head>
 <body>
-    <h1>Main Quest</h1>
-    
-    {% block nav %}
-    <nav>
-        {% if not user.is_authenticated %}
-            <a href="{% url "login" %}?next={{ request.path }}">Accedi</a>
-            <a href="{% url "register" %}?next={{ request.path }}">Registrati</a>
-        {% else %}
-            {% if user.acquirente_profile %}
-                <strong>{{ user.acquirente_profile.nome }}</strong>
-                <a href="{% url "profilo_acquirente" user.acquirente_profile.pk %}">Area personale</a>
-            {% elif user.venditore_profile %}
-                <strong>{{ user.venditore_profile.nome }}</strong>
-                <a href="{% url "profilo_venditore" user.venditore_profile.pk %}">Area personale</a>
-            {% endif %}
-            <a href="{% url "logout" %}">Logout</a>
-        {% endif %}
-    
-        <h3>Cerca nello store</h3>
-        <form method="POST" action="{% url "risultati_ricerca" %}"> {% csrf_token %}
-            {{ search_form.as_p }}
-            <input type="submit" value="Cerca">
-        </form>
-    </nav>
-    {% endblock %}
-    
-    {% block content %}
-    {% endblock %}
+    <div class="page-container">
+        <div class="content-wrap">
+            <h1 class="main-title"><a href="{% url "home" %}">Main Quest</a></h1>
+        
+            {% block nav %}
+            <nav class="navbar">
+                <div class="nav-links">
+                    {% if not user.is_authenticated %}
+                        <a href="{% url "login" %}?next={{ request.path }}">Accedi</a>
+                        <a href="{% url "register" %}?next={{ request.path }}">Registrati</a>
+                    {% else %}
+                        {% if user.acquirente_profile %}
+                            <strong>{{ user.acquirente_profile.nome }}</strong>
+                            <a href="{% url "profilo_acquirente" user.acquirente_profile.pk %}">Area personale</a>
+                        {% elif user.venditore_profile %}
+                            <strong>{{ user.venditore_profile.nome }}</strong>
+                            <a href="{% url "profilo_venditore" user.venditore_profile.pk %}">Area personale</a>
+                        {% endif %}
+                        <a href="{% url "logout" %}">Logout</a>
+                    {% endif %}
+                </div>
+                <div class="search-bar">
+                    <form method="POST" action="{% url "risultati_ricerca" %}"> {% csrf_token %}
+                        {{ search_form.search_terms }}
+                        <button type="submit">Cerca</button>
+                    </form>
+                </div>
+            </nav>
+            {% endblock %}
+            
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+        <div class="footer">
+            {% include "footer.html" %}
+        </div>
+    </div>
 </body>
 </html>

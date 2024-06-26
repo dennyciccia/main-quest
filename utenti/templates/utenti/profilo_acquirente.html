@@ -8,30 +8,32 @@
     
     <h2>{{ acquirente.nome }}</h2>
 
-    <img src="{% static acquirente.foto_profilo.url %}" alt="foto profilo" width="180" height="180">
+    <div class="foto-profilo-container">
+        <img src="{% static acquirente.foto_profilo.url %}" alt="foto profilo">
+    </div>
     
     <p><strong>Biografia:</strong></p>
     <p>{{ acquirente.biografia }}</p>
     
     <h3>Giochi posseduti:</h3>
-    <ul>
+    <ul class="lista-giochi">
     {% for p in acquirente.prodotti.all %}
-        <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
+        <li>
+            <a href="{% url "pagina_negozio" p.pk %}">
+                <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
+                <span>{{ p.titolo }}</span>
+            </a>
+        </li>
     {% endfor %}
     </ul>
     
     {% if user.is_authenticated and user.acquirente_profile.pk == user_id %}
-        <a href="{% url "modifica_profilo_acquirente" user_id %}?next={{ request.path }}"><button type="button">Modifica profilo</button></a>
-    {% endif %}
-    
-    {% if user.is_authenticated and user.acquirente_profile.pk == user_id %}
-        <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button">Elimina account</button></a>
+        <a href="{% url "modifica_profilo_acquirente" user_id %}?next={{ request.path }}"><button type="button" class="button-modifica">Modifica profilo</button></a>
+        <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button" class="button-elimina">Elimina account</button></a>
     {% endif %}
     
     {% if next %}
-        <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+        <p class="back"><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
     {% endif %}
-    
-    {% include "footer.html" %}
 
 {% endblock %}

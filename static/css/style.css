@@ -1,0 +1,256 @@
+/* stile generale */
+body {
+    background-color: #272727;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+.main-title {
+    text-align: center;
+}
+
+.main-title a {
+    color: #d14400;
+    text-decoration: none;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #d14400;
+}
+
+.page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+.content-wrap {
+    padding-bottom: 2.5rem;
+}
+
+/* stile navbar */
+.navbar {
+    background-color: #d14400;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
+}
+
+.navbar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 1.2em;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* stile barra di ricerca */
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    font-size: 1em;
+}
+
+.search-bar button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #ffffff;
+    color: #d14400;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.search-bar button:hover {
+    background-color: #e0e0e0;
+}
+
+/* stile contenuto */
+
+/* elementi home */
+.container {
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.lista-giochi {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto;
+}
+
+.lista-giochi li {
+    flex: 0 0 auto;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;
+}
+
+.lista-giochi a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.lista-giochi img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.lista-giochi span {
+    display: block;
+    font-size: 1.2em;
+    margin-top: 5px;
+    color: #ffffff;
+}
+
+.giochi-popolari, .giochi-recenti, .giochi-consigliati {
+    margin-bottom: 40px;
+}
+
+.giochi-popolari h3, .giochi-recenti h3, .giochi-consigliati h3 {
+    color: #d14400;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* elementi profilo */
+.foto-profilo-container img {
+    width: auto;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.back a {
+    text-decoration: underline;
+}
+
+.button-modifica, .button-pubblica, .button-acquista {
+    background-color: transparent;
+    color: #d14400;
+    border: 2px solid #d14400;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button-modifica:hover, .button-pubblica:hover, .button-acquista:hover {
+    background-color: #d14400;
+    color: #ffffff;
+}
+
+.button-elimina {
+    background-color: transparent;
+    color: #ff3333;
+    border: 2px solid #ff3333;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button-elimina:hover {
+    background-color: #ff3333;
+    color: #ffffff;
+}
+
+/* elementi pagina negozio */
+h2 {
+    color: #d14400;
+    text-align: center;
+    font-weight: bold;
+}
+
+.game-info {
+    display: flex;
+    gap: 20px;
+    background-color: #272727;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.game-image img {
+    max-height: 400px;
+    width: auto;
+    border-radius: 8px;
+}
+
+.game-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-details p {
+    margin: 10px 0;
+}
+
+.domande, .recensioni {
+    margin-bottom: 20px;
+}
+
+.domanda, .recensione {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.domanda p, .recensione p {
+    margin: 5px 0;
+}
+
+.data-pubblicazione-recensione {
+    font-size: 0.7em;
+    font-style: italic;
+}
+
+/* stile footer */
+.footer {
+    background-color: #d14400;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}

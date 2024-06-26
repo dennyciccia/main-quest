@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "prodotti.apps.ProdottiConfig",
-    "utenti.apps.UtentiConfig"
+    "utenti.apps.UtentiConfig",
+    "crispy_forms",
+    "crispy_bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -132,3 +134,7 @@ AUTH_USER_MODEL = "utenti.CustomUser"
 # media caricati dagli utenti
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+# front-end
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"

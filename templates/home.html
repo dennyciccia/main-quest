@@ -5,30 +5,48 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    
-    <h3>Videogiochi più popolari</h3>
-    <ul>
-    {% for p in popolari %}
-        <li><a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a></li>
-    {% endfor %}
-    </ul>
-    
-    <h3>Videogiochi usciti di recente</h3>
-    <ul>
-    {% for r in recenti %}
-        <li><a href="{% url "pagina_negozio" r.pk %}">{{ r.titolo }}</a></li>
-    {% endfor %}
-    </ul>
-    
-    {% if consigliati is not None %}
-        <h3>Videogiochi consigliati per te</h3>
-        <ul>
-        {% for c in consigliati %}
-            <li><a href="{% url "pagina_negozio" c.pk %}">{{ c.titolo }}</a></li>
+    <div class="giochi-popolari">
+        <h3>Videogiochi più popolari</h3>
+        <ul class="lista-giochi">
+        {% for p in popolari %}
+            <li>
+                <a href="{% url "pagina_negozio" p.pk %}">
+                    <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
+                    <span>{{ p.titolo }}</span>
+                </a>
+            </li>
         {% endfor %}
         </ul>
+    </div>
+    
+    <div class="giochi-recenti">
+        <h3>Videogiochi usciti di recente</h3>
+        <ul class="lista-giochi">
+        {% for r in recenti %}
+            <li>
+                <a href="{% url "pagina_negozio" r.pk %}">
+                    <img src="{{ r.immagine.url }}" alt="{{ r.titolo }}">
+                    <span>{{ r.titolo }}</span>
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    {% if consigliati is not None %}
+        <div class="giochi-consigliati">
+            <h3>Videogiochi consigliati per te</h3>
+            <ul class="lista-giochi">
+            {% for c in consigliati %}
+            <li>
+                <a href="{% url "pagina_negozio" c.pk %}">
+                    <img src="{{ c.immagine.url }}" alt="{{ c.titolo }}">
+                    <span>{{ c.titolo }}</span>
+                </a>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
     {% endif %}
-
-    {% include "footer.html" %}
     
 {% endblock %}

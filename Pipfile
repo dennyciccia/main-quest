@@ -7,6 +7,7 @@ name = "pypi"
 django = "*"
 django-braces = "*"
 pandas = "*"
+crispy-bootstrap4 = "*"
 
 [dev-packages]
 

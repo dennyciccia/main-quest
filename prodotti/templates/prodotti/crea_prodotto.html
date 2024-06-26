@@ -8,11 +8,9 @@
     <h1>Pubblica un prodotto</h1>
     
     <form method="POST" action="{% url "pubblica_prodotto" %}" enctype="multipart/form-data"> {% csrf_token %}
-        {{ form.as_p }}
-        {{ immagine_formset.management_form }}
-        {% for form in immagine_formset %}
-            {{ form.as_p }}
-        {% endfor %}
+        <table>
+            {{ form.as_table }}
+        </table>
         <button type="submit">Pubblica</button>
         <a href="{% url "profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
     </form>

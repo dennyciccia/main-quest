@@ -8,7 +8,9 @@
     <h1>Modifica di {{ prodotto.titolo }}</h1>
     
     <form method="POST" action="{% url "modifica_prodotto" prodotto.pk %}" enctype="multipart/form-data"> {% csrf_token %}
-        {{ form.as_p }}
+        <table>
+            {{ form.as_table }}
+        </table>
         <button type="submit">Modifica</button>
         <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
     </form>

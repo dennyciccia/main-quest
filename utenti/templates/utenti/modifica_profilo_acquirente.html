@@ -10,7 +10,9 @@
     <h2>Modifica profilo</h2>
 
     <form method="POST" action="{% url "modifica_profilo_acquirente" user.acquirente_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
-        {{ form.as_p }}
+        <table>
+            {{ form.as_table }}
+        </table>
         <button type="submit">Salva modifiche</button>
     </form>
 
