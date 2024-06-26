@@ -1,6 +1,6 @@
 from datetime import date
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator, MaxLengthValidator
 from django.forms import inlineformset_factory
 
 from prodotti.models import Recensione, Domanda, Prodotto
@@ -11,6 +11,15 @@ class OrdineForm(forms.Form):
     numero_carta = forms.CharField(label="Numero carta", min_length=16, max_length=16)
     scadenza_carta = forms.CharField(label="Scadenza carta", min_length=6, max_length=6)
     cvv = forms.CharField(label="CVV", min_length=3, max_length=3)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["numero_carta"].validators.append(MinLengthValidator(16))
+        self.fields["numero_carta"].validators.append(MaxLengthValidator(16))
+        self.fields["scadenza_carta"].validators.append(MinLengthValidator(6))
+        self.fields["scadenza_carta"].validators.append(MaxLengthValidator(6))
+        self.fields["cvv"].validators.append(MinLengthValidator(3))
+        self.fields["cvv"].validators.append(MaxLengthValidator(3))
 
 
 class RecensioneForm(forms.ModelForm):
