@@ -28,7 +28,7 @@ def recommendations(current_user, top_n=None, threshold=None):
     # popolazione matrice
     for utente in utenti:
         for prodotto in utente.prodotti.all():
-            user_item_matrix.at[utente.pk, prodotto.pk] = Decimal(1) # punteggio 1 solo per aver acquistato
+            user_item_matrix.at[utente.pk, prodotto.pk] = Decimal(6) # punteggio 6 solo per aver acquistato
 
             recensione = recensioni.filter(utente=utente, prodotto=prodotto).first()
             if recensione:
