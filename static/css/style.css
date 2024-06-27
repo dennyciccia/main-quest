@@ -18,6 +18,11 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
 }
 
+.second-title {
+    color: #ffffff;
+    text-align: center;
+}
+
 a {
     color: #ffffff;
     text-decoration: none;
@@ -189,7 +194,7 @@ a:hover {
 }
 
 /* elementi pagina negozio */
-h2 {
+.game-title {
     color: #d14400;
     text-align: center;
     font-weight: bold;
@@ -237,6 +242,15 @@ h2 {
 .data-pubblicazione-recensione {
     font-size: 0.7em;
     font-style: italic;
+}
+
+.centered-paragraph {
+    text-align: center;
+}
+
+/* elementi pagina eliminazione profilo */
+.info-elimina {
+    text-align: center;
 }
 
 /* stile footer */

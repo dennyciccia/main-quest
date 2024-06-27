@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    {% load static %}
+    
     <meta charset="UTF-8">
     <title>Ordine</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style_form.css' %}" rel="stylesheet">
 </head>
 <body>
-    <h1>Ordine di acquisto per {{ prodotto.titolo }}</h1>
-    
-    <p>Totale ordine: {{ prodotto.prezzo }}</p>
-    
-    <form method="POST" action="{% url "ordine" prodotto.pk %}"> {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <button type="submit">Conferma ordine</button>
-    </form>
-    
-    <a href="{{ next }}">Annulla ordine</a>
+    <div class="page-container">
+        <div class="content-wrap">
+            <h1 class="main-title"><a href="{% url "home" %}">Main Quest</a></h1>
+            
+            <h2 class="second-title">Ordine di acquisto per {{ prodotto.titolo }}</h2>
+
+            <p class="centered-paragraph">Totale ordine: {{ prodotto.prezzo }}</p>
+
+            <form method="POST" action="{% url "ordine" prodotto.pk %}"> {% csrf_token %}
+                {{ form.as_table }}
+                <button type="submit">Conferma ordine</button>
+                <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla ordine</button></a>
+            </form>
+        </div>
+        <div class="footer">
+            {% include "footer.html" %}
+        </div>
+    </div>
 </body>
 </html>

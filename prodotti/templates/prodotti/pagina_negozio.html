@@ -6,7 +6,7 @@
 
 {% block content %}
     
-    <h2>{{ prodotto.titolo }}</h2>
+    <h2 class="game-title">{{ prodotto.titolo }}</h2>
     
     <div class="game-info">
         <div class="game-image">
@@ -21,14 +21,9 @@
             {% endif %}
             
             <p>{{ prodotto.descrizione }}</p>
-            
             <p><strong>Genere:</strong> {{ prodotto.genere }}</p>
-            
-    
-            
             <p><strong>Data di rilascio:</strong> {{ prodotto.data_rilascio }}</p>
             <p><strong>Sviluppatore:</strong> <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
-            
             <p>
                 <strong>Prezzo:</strong> {{ prodotto.prezzo }} 
                 
@@ -42,14 +37,13 @@
                     {% endif %}
                 {% endif %}
             </p>
-            
             <p><strong>Requisiti:</strong> {{ prodotto.requisiti }}</p>
         </div>
     </div>
     
     <div class="domande">
         <h3>Domande</h3>
-        {% if user.acquirente_profile.type == "acquirente" %}
+        {% if user.acquirente_profile.type == "acquirente" and prodotto not in user.acquirente_profile.prodotti.all %}
             <p><a href="{% url "fai_domanda" prodotto.pk %}"><button class="button-pubblica">Fai una domanda</button></a></p>
         {% endif %}
         {% for d in prodotto.domande.all %}

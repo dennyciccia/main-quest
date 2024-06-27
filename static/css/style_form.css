@@ -1,0 +1,93 @@
+/* Stile generale per i form */
+form {
+    background-color: #272727;
+    padding: 20px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 500px;
+}
+
+/* Stile per i label dei campi */
+form label {
+    font-weight: bold;
+    color: #d14400;
+    text-align: left;
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Stile per i campi di input */
+form input, form select, form textarea {
+    padding: 10px;
+    border: 2px solid #d14400;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 75%;
+    max-width: 400px;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+    border-color: #ff5400;
+    outline: none;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.radio-group div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Stile per i bottoni */
+form button {
+    background-color: transparent;
+    border: 2px solid #d14400;
+    color: #d14400;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Barlow', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    max-width: 400px;
+}
+
+form button:hover {
+    background-color: #d14400;
+    color: #ffffff;
+}
+
+/* Stile per i messaggi di errore */
+form .errorlist {
+    color: #ff0000;
+    margin-bottom: 20px;
+}
+
+form .errorlist li {
+    list-style-type: none;
+}

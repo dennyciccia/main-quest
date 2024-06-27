@@ -8,12 +8,11 @@ class SearchForm(forms.Form):
 class RegisterForm(UserCreationForm):
     user_type= forms.ChoiceField(
         choices=[('acquirente', 'Acquirente'), ('venditore', 'Venditore')],
-        widget=forms.RadioSelect,
+        widget=forms.RadioSelect(attrs={'class': 'radio-group'}),
         label='Registrati come'
     )
     username = forms.CharField(label="Nome utente", max_length=100)
     email = forms.EmailField(label="E-mail", max_length=100)
-    #password = forms.CharField(widget=forms.PasswordInput, label="Password")
 
     class Meta:
         model = CustomUser
