@@ -15,7 +15,7 @@
         <div class="content-wrap">
             <h1 class="main-title"><a href="{% url "home" %}">Main Quest</a></h1>
             
-            <h2 class="second-title">Scrivi recensione di {{ prodotto.titolo }}</h2>
+            <h2 class="second-title">Scrivi una recensione per {{ prodotto.titolo }}</h2>
 
             <form method="POST" action="{% url "scrivi_recensione" prodotto.pk %}"> {% csrf_token %}
                 {{ form.as_p }}

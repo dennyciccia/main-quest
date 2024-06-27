@@ -27,9 +27,6 @@ class Acquirente(models.Model):
     foto_profilo = models.ImageField(upload_to="profile_pics/", default="imgs/default_profile_image.png")
     biografia = models.TextField(blank=True, default="")
 
-    def type(self):
-        return "acquirente"
-
     def __str__(self):
         return f"{self.nome} ({self.pk})"
 
@@ -40,9 +37,6 @@ class Venditore(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='venditore_profile')
     nome = models.CharField(max_length=100)
     foto_profilo = models.ImageField(upload_to="profile_pics/", default="media/imgs/default_profile_image.png")
-
-    def type(self):
-        return "venditore"
 
     def __str__(self):
         return f"{self.nome} ({self.pk})"
