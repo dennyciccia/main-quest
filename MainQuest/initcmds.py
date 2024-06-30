@@ -1,3 +1,5 @@
+from django.contrib.auth.models import Group
+
 from prodotti.models import Prodotto, Recensione, Domanda
 from utenti.models import CustomUser, Acquirente, Venditore
 from datetime import date
@@ -70,11 +72,15 @@ def init_db():
     }
 
     # creazione tabelle
+    gruppo_acquirenti = Group.objects.create(name="Acquirenti")
+    gruppo_venditori = Group.objects.create(name="Venditori")
+
     for i in range(len(acquirentidict["nomi"])):
-        u = CustomUser.objects.create(
+        u = CustomUser.objects.create_user(
             username=acquirentidict["nomi"][i],
             email=f"email{i}@email.com",
             password=make_password("password"))
+        u.groups.add(gruppo_acquirenti)
         a = Acquirente()
         a.user = u
         for k in acquirentidict:
@@ -87,18 +93,19 @@ def init_db():
         a.save()
 
     for i in range(len(venditoridict["nomi"])):
-        u = CustomUser.objects.create(
+        u = CustomUser.objects.create_user(
             username=venditoridict["nomi"][i],
             email=f"email{i}@email.com",
             password=make_password("password"))
-        e = Venditore()
-        e.user = u
+        u.groups.add(gruppo_venditori)
+        v = Venditore()
+        v.user = u
         for k in venditoridict:
             if k == "nomi":
-                e.nome = venditoridict[k][i]
+                v.nome = venditoridict[k][i]
             if k == "foto":
-                e.foto_profilo = venditoridict[k][i]
-        e.save()
+                v.foto_profilo = venditoridict[k][i]
+        v.save()
 
     for i in range(len(prodottidict["titoli"])):
         p = Prodotto()
@@ -121,18 +128,7 @@ def init_db():
                 p.save()
                 p.acquirenti.add(*(Acquirente.objects.filter(nome__in=prodottidict[k][i])))
         p.save()
-    """
-    for i in range(len(immaginidict["imgs"])):
-        img = Immagine()
-        for k in immaginidict:
-            if k == "imgs":
-                img.img = immaginidict[k][i]
-            if k == "testi_alternativi":
-                img.testo_alternativo = immaginidict[k][i]
-            if k == "prodotti":
-                img.prodotto = Prodotto.objects.filter(titolo__iexact=immaginidict[k][i]).first()
-        img.save()
-    """
+
     for i in range(len(recensionidict["testi"])):
         r = Recensione()
         for k in recensionidict:

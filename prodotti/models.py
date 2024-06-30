@@ -5,12 +5,12 @@ from utenti.models import Venditore, Acquirente
 # Create your models here.
 class Prodotto(models.Model):
     titolo = models.CharField(max_length=100)
+    immagine = models.ImageField(upload_to="game_images/", default="imgs/placeholder_image.png")
     descrizione = models.TextField()
     genere = models.CharField(max_length=50)
     prezzo = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
     requisiti = models.CharField(max_length=500)
     data_rilascio = models.DateField()
-    immagine = models.ImageField(upload_to="game_images/", default="imgs/placeholder_image.png")
     venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE, related_name="prodotti")
     acquirenti = models.ManyToManyField(Acquirente, related_name="prodotti")
 
@@ -22,7 +22,7 @@ class Prodotto(models.Model):
 
 class Recensione(models.Model):
     testo = models.TextField(blank=True)
-    voto = models.DecimalField(decimal_places=1, max_digits=3, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    voto = models.DecimalField(decimal_places=1, max_digits=3, validators=[MinValueValidator(1), MaxValueValidator(10)])
     data_pubblicazione = models.DateField()
     utente = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="recensioni")
     prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="recensioni")

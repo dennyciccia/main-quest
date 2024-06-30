@@ -25,7 +25,7 @@ class OrdineForm(forms.Form):
 class RecensioneForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["voto"].validators.append(MinValueValidator(0))
+        self.fields["voto"].validators.append(MinValueValidator(1))
         self.fields["voto"].validators.append(MaxValueValidator(10))
 
     class Meta:
