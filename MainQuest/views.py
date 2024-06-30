@@ -58,7 +58,7 @@ def home(request):
     # determinazione dei prodotti consigliati con il recommendation system
     consigliati = None
     if hasattr(request.user, "acquirente_profile"):
-        consigliati = recommendations(request.user.acquirente_profile, top_n=5)
+        consigliati = recommendations(request.user.acquirente_profile, top_n=9)
 
     # definisco il context
     context = {"title": "Home - MainQuest", "popolari": popolari, "recenti": recenti, "search_form": form, "consigliati": consigliati}

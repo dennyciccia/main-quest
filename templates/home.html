@@ -5,6 +5,23 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+    
+    {% if consigliati is not None %}
+        <div class="giochi-consigliati">
+            <h3>Videogiochi consigliati per te</h3>
+            <ul class="lista-giochi">
+            {% for c in consigliati %}
+            <li>
+                <a href="{% url "pagina_negozio" c.pk %}">
+                    <img src="{{ c.immagine.url }}" alt="{{ c.titolo }}">
+                    <span>{{ c.titolo }}</span>
+                </a>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
     <div class="giochi-popolari">
         <h3>Videogiochi più popolari</h3>
         <ul class="lista-giochi">
@@ -32,21 +49,5 @@
         {% endfor %}
         </ul>
     </div>
-    
-    {% if consigliati is not None %}
-        <div class="giochi-consigliati">
-            <h3>Videogiochi consigliati per te</h3>
-            <ul class="lista-giochi">
-            {% for c in consigliati %}
-            <li>
-                <a href="{% url "pagina_negozio" c.pk %}">
-                    <img src="{{ c.immagine.url }}" alt="{{ c.titolo }}">
-                    <span>{{ c.titolo }}</span>
-                </a>
-            </li>
-            {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
     
 {% endblock %}
