@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
 from utenti.models import Acquirente, Venditore, CustomUser
 
 
@@ -73,3 +75,12 @@ class ModificaProfiloVenditoreForm(ModificaProfiloForm):
     class Meta:
         model = Venditore
         fields = ["username", "email", "password1", "password2", "clear_image", "foto_profilo"]
+
+
+class CreaModeratoreForm(UserCreationForm):
+    username = forms.CharField(label="Nome moderatore", max_length=100)
+    email = forms.EmailField(label="E-mail", max_length=100)
+
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "password1", "password2"]

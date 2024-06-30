@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Elementi oscurati {% endblock %}
+
+{% block content %}
+
+    <h2>Elementi oscurati dai moderatori</h2>
+    
+    <div class="prodotti">
+        <h3>Prodotti</h3>
+        <ul>
+        {% for p in prodotti %}
+            <li>
+                <a href="{% url "pagina_negozio" p.pk %}">{{ p.titolo }}</a>
+                <a href="{% url "rendi_visibile_elemento" p.pk %}?classe=Prodotto&next={% url "elementi_oscurati" %}"><button type="button" class="button-ban">Rendi visibile</button></a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="recensioni">
+        <h3>Recensioni</h3>
+        <ul>
+        {% for r in recensioni %}
+            <li>
+                Recensione su <a href="{% url "pagina_negozio" r.prodotto.pk %}">{{ r.prodotto.titolo }}</a><br/>
+                Testo: {{ r.testo }} <br/>
+                <a href="{% url "rendi_visibile_elemento" r.pk %}?classe=Recensione&next={% url "elementi_oscurati" %}"><button type="button" class="button-ban">Rendi visibile</button></a> 
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="domande">
+        <h3>Domande</h3>
+        <ul>
+        {% for d in domande %}
+            <li>
+                Domanda su <a href="{% url "pagina_negozio" d.prodotto.pk %}">{{ d.prodotto.titolo }}</a><br/>
+                Testo: {{ d.testo }} <br/>
+                {% if d.risposta %}
+                    Risposta: {{ d.risposta }} <br/>
+                {% endif %}
+                <a href="{% url "rendi_visibile_elemento" d.pk %}?classe=Domanda&next={% url "elementi_oscurati" %}"><button type="button" class="button-ban">Rendi visibile</button></a> 
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="acquirenti">
+        <h3>Acquirenti</h3>
+        <ul>
+        {% for a in acquirenti %}
+            <li>
+                <a href="{% url "profilo_acquirente" a.pk %}">{{ a.nome }}</a>
+                <a href="{% url "rendi_visibile_elemento" a.pk %}?classe=Acquirente&next={% url "elementi_oscurati" %}"><button type="button" class="button-ban">Rendi visibile</button></a> 
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="venditori">
+        <h3>Venditori</h3>
+        <ul>
+        {% for v in venditori %}
+            <li>
+                <a href="{% url "profilo_venditore" v.pk %}">{{ v.nome }}</a>
+                <a href="{% url "rendi_visibile_elemento" v.pk %}?classe=Venditore&next={% url "elementi_oscurati" %}"><button type="button" class="button-ban">Rendi visibile</button></a> 
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+{% endblock %}

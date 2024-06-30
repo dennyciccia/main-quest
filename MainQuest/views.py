@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
 from django.http import HttpResponseNotFound
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
 from django.contrib.auth.forms import AuthenticationForm
 from MainQuest.forms import SearchForm, RegisterForm
-from prodotti.models import Prodotto
+from prodotti.models import Prodotto, Recensione, Domanda
 from utenti.models import Acquirente, Venditore
 import django.contrib.auth as dj
 from datetime import timedelta
@@ -106,7 +106,7 @@ def login(request):
 @login_required(login_url=reverse_lazy("login"))
 def logout(request):
     dj.logout(request)
-    messages.success(request, message="Utente disconnesso.")
+    #messages.success(request, message="Utente disconnesso.")
     return redirect("home")
 
 def risultati_ricerca(request):
@@ -130,3 +130,63 @@ def risultati_ricerca(request):
 
     else:
         return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")
+
+
+@group_required("Moderatori")
+def oscura_elemento(request, pk):
+    classe = request.GET.get("classe")
+    next = request.GET.get("next")
+    if classe is None or next is None:
+        return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")
+
+    # se la classe specificata è uno tra i models
+    if classe in ["Prodotto", "Recensione", "Domanda", "Acquirente", "Venditore"]:
+        # controlla che l'elemento esiste e che non sia già stato oscurato
+        elemento = get_object_or_404(eval(classe), pk=pk)
+        if elemento.oscurato:
+            messages.error(request, "Elemento già oscurato")
+            return redirect(next)
+        # oscura elemento
+        elemento.oscurato = True
+        elemento.save()
+        messages.success(request, "Elemento oscurato")
+        return redirect(next)
+    else:
+        return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")
+
+@group_required("Moderatori")
+def rendi_visibile_elemento(request, pk):
+    classe = request.GET.get("classe")
+    next = request.GET.get("next")
+    if classe is None or next is None:
+        return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")
+
+    # se la classe specificata è uno tra i models
+    if classe in ["Prodotto", "Recensione", "Domanda", "Acquirente", "Venditore"]:
+        # controlla che l'elemento esiste e che sia già stato oscurato
+        elemento = get_object_or_404(eval(classe), pk=pk)
+        if not elemento.oscurato:
+            messages.error(request, "Elemento non oscurato")
+            return redirect(next)
+        # oscura elemento
+        elemento.oscurato = False
+        elemento.save()
+        messages.success(request, "Elemento reso di nuovo visibile")
+        return redirect(next)
+    else:
+        return HttpResponseNotFound("Errore 404: Qualcosa è andato storto...")
+
+
+@group_required("Moderatori")
+def elementi_oscurati(request):
+    form = SearchForm()
+
+    prodotti = Prodotto.objects.filter(oscurato=True)
+    recensioni = Recensione.objects.filter(oscurato=True)
+    domande = Domanda.objects.filter(oscurato=True)
+    acquirenti = Acquirente.objects.filter(oscurato=True)
+    venditori = Venditore.objects.filter(oscurato=True)
+
+    context = {"search_form": form, "prodotti": prodotti, "recensioni": recensioni, "domande": domande, "acquirenti": acquirenti, "venditori": venditori}
+
+    return render(request, template_name="elementi_oscurati.html", context=context)

@@ -13,6 +13,7 @@ class Prodotto(models.Model):
     data_rilascio = models.DateField()
     venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE, related_name="prodotti")
     acquirenti = models.ManyToManyField(Acquirente, related_name="prodotti")
+    oscurato = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.titolo} ({self.pk})"
@@ -26,6 +27,7 @@ class Recensione(models.Model):
     data_pubblicazione = models.DateField()
     utente = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="recensioni")
     prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="recensioni")
+    oscurato = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.testo[:50]} ({self.pk})"
@@ -39,6 +41,7 @@ class Domanda(models.Model):
     utente = models.ForeignKey(Acquirente, null=True, on_delete=models.SET_NULL, related_name="domande")
     utente_risposta = models.ForeignKey(Acquirente, default=None, null=True, on_delete=models.SET_NULL, related_name="risposte")
     prodotto = models.ForeignKey(Prodotto, on_delete=models.CASCADE, related_name="domande")
+    oscurato = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.testo[:50]} ({self.pk})"

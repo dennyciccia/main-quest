@@ -30,6 +30,10 @@ urlpatterns = [
     path("logout/", logout, name="logout"),
     path("cerca/risultati/", risultati_ricerca, name="risultati_ricerca"),
 
+    path("oscura/<int:pk>", oscura_elemento, name="oscura_elemento"),
+    path("rendi_disponibile/<int:pk>", rendi_visibile_elemento, name="rendi_visibile_elemento"),
+    path("elementi-oscurati/", elementi_oscurati, name="elementi_oscurati"),
+
     path("prodotti/", include("prodotti.urls")),
     path("utenti/", include("utenti.urls"))
 ]

@@ -31,76 +31,106 @@
     
     <h2 class="game-title">{{ prodotto.titolo }}</h2>
     
-    <div class="game-info">
-        <div class="game-image">
-            <img src="{% static prodotto.immagine.url %}" alt="immagine di gioco">
-        </div>
-        <div class="game-details">
-            {% if prodotto.venditore == user.venditore_profile %}
-                <p>
-                    <a href="{% url "modifica_prodotto" prodotto.pk %}"><button type="button" class="button-modifica">Modifica prodotto</button></a>
-                    <button id="button-elimina-prodotto" type="button" class="button-elimina">Elimina prodotto</button>
-                </p>
-            {% endif %}
-            
-            <p>{{ prodotto.descrizione }}</p>
-            <p><strong>Genere:</strong> {{ prodotto.genere }}</p>
-            <p><strong>Data di rilascio:</strong> {{ prodotto.data_rilascio }}</p>
-            <p><strong>Sviluppatore:</strong> <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
-            <p>
-                <strong>Prezzo:</strong> {{ prodotto.prezzo }} 
+    {% if prodotto.oscurato and not prodotto.venditore.user == user and not user.is_staff or prodotto.venditore.oscurato %}
+        <p class="p-ban">Questo prodotto è stato oscurato perchè non rispetta le norme di Main Quest</p>
+    {% else %}
+        
+        {% if prodotto.oscurato %}
+            <p class="p-ban">Questo prodotto è stato oscurato perchè non rispetta le norme di Main Quest</p>
+        {% endif %}
+        
+        {% if user.is_staff %}
+            <p class="p-ban"><a href="{% url "oscura_elemento" prodotto.pk %}?classe=Prodotto&next={% url "pagina_negozio" prodotto.pk %}"><button type="button" class="button-ban">Oscura prodotto</button></a></p>
+        {% endif %}
+        
+        <div class="game-info">
+            <div class="game-image">
+                <img src="{% static prodotto.immagine.url %}" alt="immagine di gioco">
+            </div>
+            <div class="game-details">
+                {% if prodotto.venditore == user.venditore_profile %}
+                    <p>
+                        <a href="{% url "modifica_prodotto" prodotto.pk %}"><button type="button" class="button-modifica">Modifica prodotto</button></a>
+                        <button id="button-elimina-prodotto" type="button" class="button-elimina">Elimina prodotto</button>
+                    </p>
+                {% endif %}
                 
-                {%  if not user.venditore_profile %}
-                    {% if user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all %}
-                        Acquistato
-                    {% elif user.is_authenticated %}
-                        <a href="{% url "ordine" prodotto.pk %}"><button class="button-acquista">Acquista</button></a>
-                    {% else %}
-                        <a href="{% url "login" %}?next={{ request.path }}">Accedi</a> per acquistare
+                <p>{{ prodotto.descrizione }}</p>
+                <p><strong>Genere:</strong> {{ prodotto.genere }}</p>
+                <p><strong>Data di rilascio:</strong> {{ prodotto.data_rilascio }}</p>
+                <p><strong>Sviluppatore:</strong> <a href="{% url "profilo_venditore" prodotto.venditore.pk %}">{{ prodotto.venditore.nome }}</a></p>
+                <p>
+                    <strong>Prezzo:</strong> {{ prodotto.prezzo }} 
+                    
+                    {%  if not user.venditore_profile %}
+                        {% if user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all %}
+                            Acquistato
+                        {% elif user.acquirente_profile and prodotto not in user.acquirente_profile.prodotti.all %}
+                            <a href="{% url "ordine" prodotto.pk %}"><button class="button-acquista">Acquista</button></a>
+                        {% elif not user.is_authenticated %}
+                            <a href="{% url "login" %}?next={{ request.path }}">Accedi</a> per acquistare
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-            </p>
-            <p><strong>Requisiti:</strong> {{ prodotto.requisiti }}</p>
+                </p>
+                <p><strong>Requisiti:</strong> {{ prodotto.requisiti }}</p>
+            </div>
         </div>
-    </div>
-    
-    <div class="domande">
-        <h3>Domande</h3>
-        {% if user.acquirente_profile and prodotto not in user.acquirente_profile.prodotti.all %}
-            <p><a href="{% url "fai_domanda" prodotto.pk %}"><button class="button-pubblica">Fai una domanda</button></a></p>
-        {% endif %}
-        {% for d in prodotto.domande.all %}
-            <div class="domanda">
-                <p><strong><a href="{% url "profilo_acquirente" d.utente.pk %}">{{ d.utente.nome}}</a>: {{ d.testo }}</strong></p>
-                {% if d.risposta != "" %}
-                    <p><a href="{% url "profilo_acquirente" d.utente_risposta.pk %}">{{ d.utente_risposta.nome }}</a>: {{ d.risposta }}</p>
-                {% elif user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all %}
-                    <a href="{% url "rispondi_domanda" d.pk %}"><button class="button-pubblica">Rispondi</button></a>
+        
+        <div class="domande">
+            <h3>Domande</h3>
+            {% if user.acquirente_profile and prodotto not in user.acquirente_profile.prodotti.all %}
+                <p><a href="{% url "fai_domanda" prodotto.pk %}"><button class="button-pubblica">Fai una domanda</button></a></p>
+            {% endif %}
+            {% for d in prodotto.domande.all %}
+                {% if not d.oscurato and not d.utente.oscurato or d.utente.user == user %}
+                    <div class="domanda">
+                        <p><strong><a href="{% url "profilo_acquirente" d.utente.pk %}">{{ d.utente.nome}}</a>: {{ d.testo }}</strong></p>
+                        {% if d.risposta != "" %}
+                            <p><a href="{% url "profilo_acquirente" d.utente_risposta.pk %}">{{ d.utente_risposta.nome }}</a>: {{ d.risposta }}</p>
+                        {% elif user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all %}
+                            <a href="{% url "rispondi_domanda" d.pk %}"><button class="button-pubblica">Rispondi</button></a>
+                        {% endif %}
+                    {% if d.oscurato %}
+                        <p>Questa domanda è stata oscurata perchè non rispetta le norme di Main Quest</p>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <p><a href="{% url "oscura_elemento" d.pk %}?classe=Domanda&next={% url "pagina_negozio" prodotto.pk %}"><button type="button" class="button-ban">Oscura domanda</button></a></p>
+                    {% endif %}
+                    </div>
                 {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-    
-    <div class="recensioni">
-        <h3>Recensioni</h3>
-        {% if user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all and not user_ha_scritto_recensione %}
-            <p><a href="{% url "scrivi_recensione" prodotto.pk %}"><button class="button-pubblica">Scrivi recensione</button></a></p>
-        {% endif %}
-        {% for r in prodotto.recensioni.all %}
-            <div class="recensione">
-                <p><strong><a href="{% url "profilo_acquirente" r.utente.pk %}">{{ r.utente.nome }}</a>, Voto: {{ r.voto }}</strong></p>
-                <p class="data-pubblicazione-recensione">Pubblicata il {{ r.data_pubblicazione }}</p>
-                <p>{{ r.testo }}</p>
-                {% if r in user.acquirente_profile.recensioni.all %}
-                    <a href="{% url "modifica_recensione" r.pk %}"><button class="button-modifica">Modifica</button></a>
-                    <button id="{{ r.pk }}" name="elimina-recensione" class="button-elimina" onclick="chiedi_conferma_elimina_recensione(this.id)">Elimina</button>
+            {% endfor %}
+        </div>
+        
+        <div class="recensioni">
+            <h3>Recensioni</h3>
+            {% if user.acquirente_profile and prodotto in user.acquirente_profile.prodotti.all and not user_ha_scritto_recensione %}
+                <p><a href="{% url "scrivi_recensione" prodotto.pk %}"><button class="button-pubblica">Scrivi recensione</button></a></p>
+            {% endif %}
+            {% for r in prodotto.recensioni.all %}
+                {% if not r.oscurato and not r.utente.oscurato or r.utente.user == user %}
+                    <div class="recensione">
+                        <p><strong><a href="{% url "profilo_acquirente" r.utente.pk %}">{{ r.utente.nome }}</a>, Voto: {{ r.voto }}</strong></p>
+                        <p class="data-pubblicazione-recensione">Pubblicata il {{ r.data_pubblicazione }}</p>
+                        <p>{{ r.testo }}</p>
+                        {% if r in user.acquirente_profile.recensioni.all %}
+                            <a href="{% url "modifica_recensione" r.pk %}"><button class="button-modifica">Modifica</button></a>
+                            <button id="{{ r.pk }}" name="elimina-recensione" class="button-elimina" onclick="chiedi_conferma_elimina_recensione(this.id)">Elimina</button>
+                            {% if r.oscurato %}
+                                <p>Questa recensione è stata oscurata perchè non rispetta le norme di Main Quest</p>
+                            {% endif %}
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <p><a href="{% url "oscura_elemento" r.pk %}?classe=Recensione&next={% url "pagina_negozio" prodotto.pk %}"><button type="button" class="button-ban">Oscura recensione</button></a></p>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-
-    {% if next %}
-        <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+            {% endfor %}
+        </div>
+    
+        {% if next %}
+            <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+        {% endif %}
+        
     {% endif %}
     
 {% endblock %}

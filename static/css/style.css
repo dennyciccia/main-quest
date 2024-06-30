@@ -268,3 +268,26 @@ a:hover {
     color: #ffffff;
     text-decoration: underline;
 }
+
+/* stile azioni dei moderatori */
+.button-ban {
+    background-color: transparent;
+    color: #ffb833;
+    border: 2px solid #ffb833;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button-ban:hover {
+    background-color: #ffb833;
+    color: #ffffff;
+}
+
+.p-ban {
+    text-align: center;
+}

@@ -8,32 +8,46 @@
     
     <h2>{{ acquirente.nome }}</h2>
 
-    <div class="foto-profilo-container">
-        <img src="{% static acquirente.foto_profilo.url %}" alt="foto profilo">
-    </div>
-    
-    <p><strong>Biografia:</strong></p>
-    <p>{{ acquirente.biografia }}</p>
-    
-    <h3>Giochi posseduti:</h3>
-    <ul class="lista-giochi">
-    {% for p in acquirente.prodotti.all %}
-        <li>
-            <a href="{% url "pagina_negozio" p.pk %}">
-                <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
-                <span>{{ p.titolo }}</span>
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-    
-    {% if user.is_authenticated and user.acquirente_profile.pk == user_id %}
-        <a href="{% url "modifica_profilo_acquirente" user_id %}?next={{ request.path }}"><button type="button" class="button-modifica">Modifica profilo</button></a>
-        <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button" class="button-elimina">Elimina account</button></a>
-    {% endif %}
-    
-    {% if next %}
-        <p class="back"><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+    {% if acquirente.oscurato and not acquirente.user == user and not user.is_staff %}
+        <p class="p-ban">Questo profilo è stato oscurato perchè non rispetta le norme di Main Quest</p>
+    {% else %}
+        
+        {% if acquirente.oscurato %}
+            <p class="p-ban">Questo profilo è stato oscurato perchè non rispetta le norme di Main Quest</p>
+        {% endif %}
+        
+        {% if user.is_staff %}
+            <p class="p-ban"><a href="{% url "oscura_elemento" acquirente.pk %}?classe=Acquirente&next={% url "profilo_acquirente" acquirente.pk %}"><button type="button" class="button-ban">Oscura acquirente</button></a></p>
+        {% endif %}
+        
+        <div class="foto-profilo-container">
+            <img src="{% static acquirente.foto_profilo.url %}" alt="foto profilo">
+        </div>
+        
+        <p><strong>Biografia:</strong></p>
+        <p>{{ acquirente.biografia }}</p>
+        
+        <h3>Giochi posseduti:</h3>
+        <ul class="lista-giochi">
+        {% for p in acquirente.prodotti.all %}
+            <li>
+                <a href="{% url "pagina_negozio" p.pk %}">
+                    <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
+                    <span>{{ p.titolo }}</span>
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+        
+        {% if user.is_authenticated and user.acquirente_profile.pk == user_id %}
+            <a href="{% url "modifica_profilo_acquirente" user_id %}?next={{ request.path }}"><button type="button" class="button-modifica">Modifica profilo</button></a>
+            <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button" class="button-elimina">Elimina account</button></a>
+        {% endif %}
+        
+        {% if next %}
+            <p class="back"><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
+        {% endif %}
+        
     {% endif %}
 
 {% endblock %}

@@ -1,16 +1,29 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from MainQuest.forms import SearchForm
-from utenti.forms import ModificaProfiloAcquirenteForm, ModificaProfiloVenditoreForm
+from utenti.forms import ModificaProfiloAcquirenteForm, ModificaProfiloVenditoreForm, CreaModeratoreForm
 from utenti.models import Acquirente, Venditore, CustomUser
 from MainQuest.views import group_required
 
 
 # Create your views here.
+
+class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    login_url = reverse_lazy("login")
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Accesso negato. Solo gli amministratori possono accedere a questa pagina.")
+        if self.request.user.is_authenticated: return redirect(reverse_lazy("home"))
+        else: return redirect(reverse_lazy("login"))
+
 
 class Profilo(DetailView):
     def get_context_data(self, **kwargs):
@@ -108,3 +121,25 @@ def elimina_account(request, pk):
 
     # chiedi conferma eliminazione
     return render(request, template_name="utenti/conferma_eliminazione_account.html", context={"next": request.GET.get("next")})
+
+
+class CreaModeratore(SuperUserRequiredMixin, CreateView):
+    model = CustomUser
+    form_class = CreaModeratoreForm
+    template_name = "utenti/crea_moderatore.html"
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["next"] = self.request.GET["next"]
+        return context
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_staff = True
+        user.set_password(form.cleaned_data["password1"])
+        user.groups.add("Moderatori")
+        user.save()
+        response = super().form_valid(form)
+        messages.success(self.request, message="Utente moderatore creato con successo.")
+        return response

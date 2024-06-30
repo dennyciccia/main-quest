@@ -26,4 +26,6 @@ urlpatterns = [
     path("acquirente/modifica_profilo/<int:pk>", modifica_profilo_acquirente, name="modifica_profilo_acquirente"),
     path("venditore/modifica_profilo/<int:pk>", modifica_profilo_venditore, name="modifica_profilo_venditore"),
     path("utente/elimina_account/<int:pk>", elimina_account, name="elimina_account"),
+
+    path("crea-moderatore/", CreaModeratore.as_view(), name="crea_moderatore"),
 ]
