@@ -18,6 +18,8 @@ Including another URLconf
 from django.urls import path
 from .views import *
 
+app_name = "prodotti"
+
 urlpatterns = [
     path("game/<int:pk>", PaginaNegozio.as_view(), name="pagina_negozio"),
     path("game/pubblica/", PubblicaProdotto.as_view(), name="pubblica_prodotto"),
