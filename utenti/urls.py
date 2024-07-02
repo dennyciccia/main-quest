@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path
 from .views import *
 
+app_name = "utenti"
+
 urlpatterns = [
     path("acquirente/<int:pk>", ProfiloAcquirente.as_view(), name="profilo_acquirente"),
     path("venditore/<int:pk>", ProfiloVenditore.as_view(), name="profilo_venditore"),
