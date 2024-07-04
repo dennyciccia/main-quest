@@ -1,8 +1,5 @@
-from datetime import date
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator, MaxLengthValidator
-from django.forms import inlineformset_factory
-
 from prodotti.models import Recensione, Domanda, Prodotto
 
 

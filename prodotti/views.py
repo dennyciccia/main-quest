@@ -94,7 +94,7 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+        return reverse("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
 
 class ModificaRecensione(GroupRequiredMixin, UpdateView):
@@ -122,7 +122,7 @@ class ModificaRecensione(GroupRequiredMixin, UpdateView):
 
     def get_success_url(self):
         prodotto = self.get_context_data()["prodotto"]
-        return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})
+        return reverse("pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
 @group_required("Acquirenti")
@@ -161,7 +161,7 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+        return reverse("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
 
 class RispondiDomanda(GroupRequiredMixin, UpdateView):
@@ -196,7 +196,7 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
 
     def get_success_url(self):
         prodotto = self.get_context_data()["prodotto"]
-        return reverse_lazy("pagina_negozio", kwargs={"pk": prodotto.pk})
+        return reverse("pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
 class PubblicaProdotto(GroupRequiredMixin, CreateView):
@@ -214,7 +214,7 @@ class PubblicaProdotto(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})
+        return reverse("pagina_negozio", kwargs={"pk": self.object.pk})
 
 
 class ModificaProdotto(GroupRequiredMixin, UpdateView):
@@ -236,7 +236,7 @@ class ModificaProdotto(GroupRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy("pagina_negozio", kwargs={"pk": self.object.pk})
+        return reverse("pagina_negozio", kwargs={"pk": self.object.pk})
 
 
 @group_required("Venditori")

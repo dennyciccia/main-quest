@@ -2,8 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, CreateView
 from MainQuest.forms import SearchForm
 from utenti.forms import ModificaProfiloAcquirenteForm, ModificaProfiloVenditoreForm, CreaModeratoreForm
@@ -21,8 +22,8 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def handle_no_permission(self):
         messages.error(self.request, "Accesso negato. Solo gli amministratori possono accedere a questa pagina.")
-        if self.request.user.is_authenticated: return redirect(reverse_lazy("home"))
-        else: return redirect(reverse_lazy("login"))
+        if self.request.user.is_authenticated: return redirect(reverse("home"))
+        else: return redirect(reverse("login"))
 
 
 class Profilo(DetailView):
@@ -124,6 +125,7 @@ def elimina_account(request, pk):
 
 
 class CreaModeratore(SuperUserRequiredMixin, CreateView):
+    login_url = reverse_lazy("login")
     model = CustomUser
     form_class = CreaModeratoreForm
     template_name = "utenti/crea_moderatore.html"
@@ -138,8 +140,9 @@ class CreaModeratore(SuperUserRequiredMixin, CreateView):
         user = form.save(commit=False)
         user.is_staff = True
         user.set_password(form.cleaned_data["password1"])
-        user.groups.add("Moderatori")
         user.save()
+        mod_group = Group.objects.get(name="Moderatori")
+        mod_group.user_set.add(user)
         response = super().form_valid(form)
         messages.success(self.request, message="Utente moderatore creato con successo.")
         return response

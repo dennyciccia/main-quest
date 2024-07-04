@@ -106,8 +106,7 @@ def login(request):
 @login_required(login_url=reverse_lazy("login"))
 def logout(request):
     dj.logout(request)
-    #messages.success(request, message="Utente disconnesso.")
-    return redirect("home")
+    return render(request, template_name="logout.html")
 
 def risultati_ricerca(request):
     if request.method == "POST":
