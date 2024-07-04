@@ -1,33 +1,17 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    {% load static %}
-    
-    <meta charset="UTF-8">
-    <title>Elimina account</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
-<body>
-    <div class="page-container">
-        <div class="content-wrap">
-            <h1 class="main-title"><a href="{% url "home" %}">Main Quest</a></h1>
+{% extends "base.html" %}
 
-            <h2 class="second-title">Eliminazione account</h2>
-            
-            <div class="info-elimina">
-                <p>Vuoi davvero eliminare il tuo account?</p>
-                <p>Verranno eliminate tutte le informazioni, compresi i prodotti acquistati/pubblicati.</p>
-                <p>L'operazione è irreversibile.</p>
-                <a href="{{ next }}"><button type="button" class="button-modifica">Annulla</button></a>
-                <a href="{% url "elimina_account" user.pk %}?commit=True"><button type="button" class="button-elimina">Conferma</button></a>
-            </div>
-        
-        </div>
-        <div class="footer">
-            {% include "footer.html" %}
-        </div>
+{% block title %}Elimina account{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+    <h2 class="second-title">Eliminazione account</h2>
+    
+    <div class="info-elimina">
+        <p>Vuoi davvero eliminare il tuo account?</p>
+        <p>Verranno eliminate tutte le informazioni, compresi i prodotti acquistati/pubblicati.</p>
+        <p>L'operazione è irreversibile.</p>
+        <a href="{{ next }}"><button type="button" class="button-modifica">Annulla</button></a>
+        <a href="{% url "elimina_account" user.pk %}?commit=True"><button type="button" class="button-elimina">Conferma</button></a>
     </div>
-</body>
-</html>
+{% endblock %}

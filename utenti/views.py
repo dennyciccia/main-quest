@@ -67,7 +67,7 @@ def modifica_profilo_acquirente(request, pk):
     else:
         form = ModificaProfiloAcquirenteForm(user=user)
 
-    return render(request, template_name="utenti/modifica_profilo_acquirente.html", context={"form": form, "user_id": pk})
+    return render(request, template_name="utenti/modifica_profilo_acquirente.html", context={"form": form, "user_id": pk, "title": "Modifica profilo"})
 
 
 class ProfiloVenditore(Profilo):
@@ -95,7 +95,7 @@ def modifica_profilo_venditore(request, pk):
             return redirect("profilo_venditore", pk=pk)
     else:
         form = ModificaProfiloVenditoreForm(user=user)
-    return render(request, template_name="utenti/modifica_profilo_venditore.html", context={"form": form, "user_id": pk})
+    return render(request, template_name="utenti/modifica_profilo_venditore.html", context={"form": form, "user_id": pk, "title": "Modifica profilo"})
 
 
 @login_required(login_url=reverse_lazy("login"))
@@ -121,7 +121,7 @@ def elimina_account(request, pk):
         return redirect("home")
 
     # chiedi conferma eliminazione
-    return render(request, template_name="utenti/conferma_eliminazione_account.html", context={"next": request.GET.get("next")})
+    return render(request, template_name="utenti/conferma_eliminazione_account.html", context={"next": request.GET.get("next"), "title": "Elimina account"})
 
 
 class CreaModeratore(SuperUserRequiredMixin, CreateView):
@@ -134,6 +134,7 @@ class CreaModeratore(SuperUserRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["next"] = self.request.GET["next"]
+        context["title"] = "Crea utente moderatore"
         return context
 
     def form_valid(self, form):

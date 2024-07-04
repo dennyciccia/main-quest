@@ -1,31 +1,11 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    {% load static %}
-    
-    <meta charset="UTF-8">
-    <title>Pubblica prodotto</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style_form.css' %}" rel="stylesheet">
-</head>
-<body>
-    <div class="page-container">
-        <div class="content-wrap">
-            <h1 class="main-title"><a href="{% url "home" %}">MainQuest</a></h1>
+{% extends "base_form.html" %}
             
-            <h2 class="second-title">Pubblica un prodotto</h2>
+{% block second_title %}Pubblica un prodotto{% endblock %}
     
-            <form method="POST" action="{% url "pubblica_prodotto" %}" enctype="multipart/form-data"> {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Pubblica</button>
-                <a href="{% url "profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
-            </form>
-        </div>
-        <div class="footer">
-            {% include "footer.html" %}
-        </div>
-    </div>
-</body>
-</html>
+{% block form %}
+    <form method="POST" action="{% url "pubblica_prodotto" %}" enctype="multipart/form-data"> {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Pubblica</button>
+        <a href="{% url "profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
+    </form>
+{% endblock %}

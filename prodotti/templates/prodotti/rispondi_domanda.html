@@ -1,33 +1,13 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    {% load static %}
-    
-    <meta charset="UTF-8">
-    <title>Rispondi a una domanda</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style_form.css' %}" rel="stylesheet">
-</head>
-<body>
-    <div class="page-container">
-        <div class="content-wrap">
-            <h1 class="main-title"><a href="{% url "home" %}">Main Quest</a></h1>
-            
-            <h2 class="second-title">Rispondi a una domanda su {{ prodotto.titolo }}</h2>
-            
-            <p class="centered-paragraph">Domanda: {{ domanda.testo }}</p>
+{% extends "base_form.html" %}
 
-            <form method="POST" action="{% url "rispondi_domanda" domanda.pk %}"> {% csrf_token %}
-                {{ form.as_table }}
-                <button type="submit">Rispondi</button>
-                <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
-            </form>
-        </div>
-        <div class="footer">
-            {% include "footer.html" %}
-        </div>
-    </div>
-</body>
-</html>
+{% block second_title %}Rispondi a una domanda su {{ prodotto.titolo }}{% endblock %}
+
+{% block form %}
+    <p class="centered-paragraph">Domanda: {{ domanda.testo }}</p>
+    
+    <form method="POST" action="{% url "rispondi_domanda" domanda.pk %}"> {% csrf_token %}
+        {{ form.as_table }}
+        <button type="submit">Rispondi</button>
+        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+    </form>
+{% endblock %}

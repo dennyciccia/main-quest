@@ -54,7 +54,7 @@ def ordine(request, pk):
     else:
         form = OrdineForm()
 
-    return render(request, template_name="prodotti/ordine.html", context={"form": form, "prodotto": prodotto})
+    return render(request, template_name="prodotti/ordine.html", context={"form": form, "prodotto": prodotto, "title": "Ordine di "+prodotto.titolo})
 
 
 class CreaRecensione(GroupRequiredMixin, CreateView):
@@ -83,6 +83,7 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["prodotto"] = Prodotto.objects.get(pk=self.kwargs["pk"])
+        context["title"] = "Scrivi recensione"
         return context
 
     def form_valid(self, form):
@@ -118,6 +119,7 @@ class ModificaRecensione(GroupRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["prodotto"] = Prodotto.objects.get(pk=self.object.prodotto.pk)
+        context["title"] = "Modifica recensione"
         return context
 
     def get_success_url(self):
@@ -151,6 +153,7 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["prodotto"] = Prodotto.objects.get(pk=self.kwargs["pk"])
+        context["title"] = "Fai una domanda"
         return context
 
     def form_valid(self, form):
@@ -186,6 +189,7 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["prodotto"] = Prodotto.objects.get(pk=self.object.prodotto.pk)
+        context["ttile"] = "Rispondi a una domanda"
         return context
 
     def form_valid(self, form):
@@ -206,6 +210,11 @@ class PubblicaProdotto(GroupRequiredMixin, CreateView):
     form_class = ProdottoForm
     template_name = "prodotti/crea_prodotto.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Pubblica prodotto"
+        return context
+
     def form_valid(self, form):
         form.instance.data_rilascio = timezone.now().date()
         form.instance.venditore = self.request.user.venditore_profile
@@ -223,6 +232,11 @@ class ModificaProdotto(GroupRequiredMixin, UpdateView):
     model = Prodotto
     form_class = ProdottoForm
     template_name = "prodotti/modifica_prodotto.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Modifica prodotto"
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         prodotto = get_object_or_404(Prodotto, pk=self.kwargs["pk"])

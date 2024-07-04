@@ -88,7 +88,8 @@ def register(request):
             return redirect(reverse("login") + "?next=" + request.GET.get("next"))
     else:
         form = RegisterForm()
-    return render(request, template_name="register.html", context={"form": form, "next": request.GET.get("next")})
+    next_url = request.GET.get("next") if request.GET.get("next") != reverse("logout") else '/'
+    return render(request, template_name="register.html", context={"form": form, "next": next_url, "title": "Registrati"})
 
 def login(request):
     if request.method == 'POST':
@@ -100,13 +101,13 @@ def login(request):
             return redirect(next_url)
     else:
         form = AuthenticationForm()
-    next_url = request.GET.get("next", '/')
-    return render(request, template_name="login.html", context={"form": form, "next": next_url})
+    next_url = request.GET.get("next", '/') if request.GET.get("next", '/') != reverse("logout") else '/'
+    return render(request, template_name="login.html", context={"form": form, "next": next_url, "title": "Login"})
 
 @login_required(login_url=reverse_lazy("login"))
 def logout(request):
     dj.logout(request)
-    return render(request, template_name="logout.html")
+    return render(request, template_name="logout.html", context={"title": "Logout"})
 
 def risultati_ricerca(request):
     if request.method == "POST":
