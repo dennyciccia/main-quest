@@ -35,7 +35,7 @@ class OrdineTest(TestCase):
         """
         self.client.logout()
 
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
@@ -50,7 +50,7 @@ class OrdineTest(TestCase):
         self.client.logout()
         self.client.login(username=self.account_venditore.username, password="password")
 
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
@@ -62,7 +62,7 @@ class OrdineTest(TestCase):
         Caso in cui il prodotto specificato tramite la pk non esiste
         """
         prev_count = self.acquirente.prodotti.count()
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk+1})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk+1})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)
@@ -76,11 +76,11 @@ class OrdineTest(TestCase):
         self.prodotto.acquirenti.add(self.acquirente)
 
         prev_count = self.acquirente.prodotti.count()
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("pagina_negozio", kwargs={"pk": self.prodotto.pk}))
+        self.assertRedirects(response, reverse("prodotti:pagina_negozio", kwargs={"pk": self.prodotto.pk}))
         self.assertEqual(self.acquirente.prodotti.count(), prev_count)
 
     def test_ordine_utente_accede_alla_pagina_con_metodo_get(self):
@@ -88,7 +88,7 @@ class OrdineTest(TestCase):
         Caso in cui l'utente accede alla pagina del form dell'ordine con il metodo GET,
         quindi la prima volta, quando non ha ancora compilato il form
         """
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -104,11 +104,11 @@ class OrdineTest(TestCase):
         Caso in cui l'utente accede alla pagina del form con il metodo POST,
         quindi la seconda volta, dopo aver compilato il form
         """
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.post(url, {"intestatario_carta": "Nome Cognome", "numero_carta": "1234567891234567", "scadenza_carta": "mmaaaa", "cvv": "123"})
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("pagina_negozio", kwargs={"pk": self.prodotto.pk}))
+        self.assertRedirects(response, reverse("prodotti:pagina_negozio", kwargs={"pk": self.prodotto.pk}))
         self.assertIn(self.acquirente, self.prodotto.acquirenti.all())
         self.assertIn(self.prodotto, self.acquirente.prodotti.all())
 
@@ -116,7 +116,7 @@ class OrdineTest(TestCase):
         """
         Caso in cui l'utente compila il form con i campi non validi
         """
-        url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
+        url = reverse("prodotti:ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.post(url, {"intestatario_carta": "Nome Cognome", "numero_carta": "1234567", "scadenza_carta": "mmaaa", "cvv": "13"})
 
         self.assertEqual(response.status_code, 200)

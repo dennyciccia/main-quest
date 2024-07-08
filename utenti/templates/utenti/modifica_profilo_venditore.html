@@ -4,10 +4,10 @@
 
 {% block form %}
 
-    <form method="POST" action="{% url "modifica_profilo_venditore" user.venditore_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
+    <form method="POST" action="{% url "utenti:modifica_profilo_venditore" user.venditore_profile.pk %}" enctype="multipart/form-data"> {% csrf_token %}
         {{ form.as_p}}
         <button type="submit">Salva modifiche</button>
-        <a href="{% url "profilo_venditore" user_id %}"><button>Annulla</button></a>
+        <a href="{% url "utenti:profilo_venditore" user_id %}"><button>Annulla</button></a>
     </form>
 
 {% endblock %}

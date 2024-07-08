@@ -17,7 +17,7 @@
             <h3>Videogiochi</h3>
             <ul>
             {% for p in prodotti %}
-                <li><a href="{% url "pagina_negozio" p.pk %}?next={{ request.path }}&terms={{ terms }}">{{ p.titolo }}</a></li>
+                <li><a href="{% url "prodotti:pagina_negozio" p.pk %}?next={{ request.path }}&terms={{ terms }}">{{ p.titolo }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -26,7 +26,7 @@
             <h3>Utenti</h3>
             <ul>
             {% for a in acquirenti %}
-                <li><a href="{% url "profilo_acquirente" a.pk %}?next={{ request.path }}&terms={{ terms }}">{{ a.nome }}</a></li>
+                <li><a href="{% url "utenti:profilo_acquirente" a.pk %}?next={{ request.path }}&terms={{ terms }}">{{ a.nome }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -35,7 +35,7 @@
             <h3>Venditori</h3>
             <ul>
             {% for v in venditori %}
-                <li><a href="{% url "profilo_venditore" v.pk %}?next={{ request.path }}&terms={{ terms }}">{{ v.nome }}</a></li>
+                <li><a href="{% url "utenti:profilo_venditore" v.pk %}?next={{ request.path }}&terms={{ terms }}">{{ v.nome }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}

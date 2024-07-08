@@ -55,7 +55,7 @@ def modifica_profilo_acquirente(request, pk):
     # controllo se l'acquirente è il proprietario del profilo
     if oggetto_acquirente != acquirente:
         messages.error(request, "Puoi modificare solo il tuo profilo.")
-        return redirect("profilo_acquirente", pk=acquirente.pk)
+        return redirect("utenti:profilo_acquirente", pk=acquirente.pk)
 
     if request.method == "POST":
         form = ModificaProfiloAcquirenteForm(request.POST, request.FILES, user=user, instance=acquirente)
@@ -63,7 +63,7 @@ def modifica_profilo_acquirente(request, pk):
             form.save()
             # tiene l'utente loggato dopo il cambio di password
             update_session_auth_hash(request, user)
-            return redirect("profilo_acquirente", pk=pk)
+            return redirect("utenti:profilo_acquirente", pk=pk)
     else:
         form = ModificaProfiloAcquirenteForm(user=user)
 
@@ -84,7 +84,7 @@ def modifica_profilo_venditore(request, pk):
     # controllo se l'acquirente è il proprietario del profilo
     if oggetto_venditore != venditore:
         messages.error(request, "Puoi modificare solo il tuo profilo.")
-        return redirect("profilo_venditore", pk=venditore.pk)
+        return redirect("utenti:profilo_venditore", pk=venditore.pk)
 
     if request.method == "POST":
         form = ModificaProfiloVenditoreForm(request.POST, request.FILES, user=user, instance=venditore)
@@ -92,7 +92,7 @@ def modifica_profilo_venditore(request, pk):
             form.save()
             # tiene l'utente loggato dopo il cambio di password
             update_session_auth_hash(request, user)
-            return redirect("profilo_venditore", pk=pk)
+            return redirect("utenti:profilo_venditore", pk=pk)
     else:
         form = ModificaProfiloVenditoreForm(user=user)
     return render(request, template_name="utenti/modifica_profilo_venditore.html", context={"form": form, "user_id": pk, "title": "Modifica profilo"})
@@ -107,9 +107,9 @@ def elimina_account(request, pk):
     if account != utente:
         messages.error(request, "Puoi eliminare solo il tuo account.")
         if hasattr(utente, "acquirente_profile"):
-            return redirect("profilo_acquirente", pk=utente.pk)
+            return redirect("utenti:profilo_acquirente", pk=utente.pk)
         elif hasattr(utente, "venditore_profile"):
-            return redirect("profilo_venditore", pk=utente.pk)
+            return redirect("utenti:profilo_venditore", pk=utente.pk)
         else:
             return redirect("home")
 

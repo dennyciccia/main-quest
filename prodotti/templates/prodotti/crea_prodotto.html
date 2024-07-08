@@ -3,9 +3,9 @@
 {% block second_title %}Pubblica un prodotto{% endblock %}
     
 {% block form %}
-    <form method="POST" action="{% url "pubblica_prodotto" %}" enctype="multipart/form-data"> {% csrf_token %}
+    <form method="POST" action="{% url "prodotti:pubblica_prodotto" %}" enctype="multipart/form-data"> {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Pubblica</button>
-        <a href="{% url "profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
+        <a href="{% url "utenti:profilo_venditore" user.pk %}"><button type="button">Annulla</button></a>
     </form>
 {% endblock %}

@@ -5,9 +5,9 @@
 {% block form %}
     <p class="centered-paragraph">Totale ordine: {{ prodotto.prezzo }}</p>
     
-    <form method="POST" action="{% url "ordine" prodotto.pk %}"> {% csrf_token %}
+    <form method="POST" action="{% url "prodotti:ordine" prodotto.pk %}"> {% csrf_token %}
         {{ form.as_table }}
         <button type="submit">Conferma ordine</button>
-        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla ordine</button></a>
+        <a href="{% url "prodotti:pagina_negozio" prodotto.pk %}"><button type="button">Annulla ordine</button></a>
     </form>
 {% endblock %}

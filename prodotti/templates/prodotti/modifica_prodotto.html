@@ -3,9 +3,9 @@
 {% block second_title %}Modifica di {{ prodotto.titolo }}{% endblock %}
 
 {% block form %}
-    <form method="POST" action="{% url "modifica_prodotto" prodotto.pk %}" enctype="multipart/form-data"> {% csrf_token %}
+    <form method="POST" action="{% url "prodotti:modifica_prodotto" prodotto.pk %}" enctype="multipart/form-data"> {% csrf_token %}
         {{ form.as_table }}
         <button type="submit">Modifica</button>
-        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+        <a href="{% url "prodotti:pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
     </form>
 {% endblock %}

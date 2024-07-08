@@ -4,10 +4,10 @@
 
 {% block form %}
 
-    <form method="POST" action="{% url "fai_domanda" prodotto.pk %}"> {% csrf_token %}
+    <form method="POST" action="{% url "prodotti:fai_domanda" prodotto.pk %}"> {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Chiedi</button>
-        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+        <a href="{% url "prodotti:pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
     </form>
 
 {% endblock %}

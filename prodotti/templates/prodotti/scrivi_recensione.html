@@ -3,9 +3,9 @@
 {% block second_title %}Scrivi una recensione per {{ prodotto.titolo }}{% endblock %}
 
 {% block form %}
-    <form method="POST" action="{% url "scrivi_recensione" prodotto.pk %}"> {% csrf_token %}
+    <form method="POST" action="{% url "prodotti:scrivi_recensione" prodotto.pk %}"> {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Pubblica</button>
-        <a href="{% url "pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
+        <a href="{% url "prodotti:pagina_negozio" prodotto.pk %}"><button type="button">Annulla</button></a>
     </form>
 {% endblock %}

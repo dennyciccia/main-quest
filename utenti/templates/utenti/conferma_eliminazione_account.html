@@ -12,6 +12,6 @@
         <p>Verranno eliminate tutte le informazioni, compresi i prodotti acquistati/pubblicati.</p>
         <p>L'operazione è irreversibile.</p>
         <a href="{{ next }}"><button type="button" class="button-modifica">Annulla</button></a>
-        <a href="{% url "elimina_account" user.pk %}?commit=True"><button type="button" class="button-elimina">Conferma</button></a>
+        <a href="{% url "utenti:elimina_account" user.pk %}?commit=True"><button type="button" class="button-elimina">Conferma</button></a>
     </div>
 {% endblock %}

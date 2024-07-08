@@ -17,7 +17,7 @@
         {% endif %}
     
         {% if user.is_staff %}
-            <p class="p-ban"><a href="{% url "oscura_elemento" object.pk %}?classe=Venditore&next={% url "profilo_venditore" object.pk %}"><button type="button" class="button-ban">Oscura venditore</button></a></p>
+            <p class="p-ban"><a href="{% url "oscura_elemento" object.pk %}?classe=Venditore&next={% url "utenti:profilo_venditore" object.pk %}"><button type="button" class="button-ban">Oscura venditore</button></a></p>
         {% endif %}
         
         <div class="foto-profilo-container">
@@ -28,7 +28,7 @@
         <ul class="lista-giochi">
         {% for p in object.prodotti.all %}
             <li>
-                <a href="{% url "pagina_negozio" p.pk %}">
+                <a href="{% url "prodotti:pagina_negozio" p.pk %}">
                     <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
                     <span>{{ p.titolo }}</span>
                 </a>
@@ -37,20 +37,20 @@
         </ul>
         
         {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
-            <p><a href="{% url "pubblica_prodotto" %}"><button type="button" class="button-pubblica">Pubblica prodotto</button></a></p>
+            <p><a href="{% url "prodotti:pubblica_prodotto" %}"><button type="button" class="button-pubblica">Pubblica prodotto</button></a></p>
         {% endif %}
         
         {% if user.is_authenticated and user.venditore_profile.pk == user_id %}
             <p>
-                <a href="{% url "modifica_profilo_venditore" user_id %}?next={{ request.path }}"><button type="button" class="button-modifica">Modifica profilo</button></a>
-                <a href="{% url "elimina_account" user.pk %}?next={{ request.path }}"><button type="button" class="button-elimina">Elimina account</button></a>
+                <a href="{% url "utenti:modifica_profilo_venditore" user_id %}?next={{ request.path }}"><button type="button" class="button-modifica">Modifica profilo</button></a>
+                <a href="{% url "utenti:elimina_account" user.pk %}?next={{ request.path }}"><button type="button" class="button-elimina">Elimina account</button></a>
             </p>
         {% endif %}
         
-        {% if next %}
-            <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
-        {% endif %}
-    
+    {% endif %}
+
+    {% if next %}
+        <p><a href="{{ next }}?terms={{ terms }}">Torna ai risultati della ricerca</a></p>
     {% endif %}
 
 {% endblock %}

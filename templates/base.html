@@ -27,13 +27,13 @@
                     {% else %}
                         {% if user.acquirente_profile %}
                             <strong>{{ user.acquirente_profile.nome }}</strong>
-                            <a href="{% url "profilo_acquirente" user.acquirente_profile.pk %}">Area personale</a>
+                            <a href="{% url "utenti:profilo_acquirente" user.acquirente_profile.pk %}">Area personale</a>
                         {% elif user.venditore_profile %}
                             <strong>{{ user.venditore_profile.nome }}</strong>
-                            <a href="{% url "profilo_venditore" user.venditore_profile.pk %}">Area personale</a>
+                            <a href="{% url "utenti:profilo_venditore" user.venditore_profile.pk %}">Area personale</a>
                         {% elif user.is_superuser %}
                             <a href="admin/">Piattaforma admin</a>
-                            <a href="{% url "crea_moderatore" %}?next={% url "home" %}">Crea utente moderatore</a>
+                            <a href="{% url "utenti:crea_moderatore" %}?next={% url "home" %}">Crea utente moderatore</a>
                         {% elif user.is_staff %}
                             <strong>{{ user.username }}</strong>
                             <a href="{% url "elementi_oscurati" %}">Lista elementi oscurati</a>    

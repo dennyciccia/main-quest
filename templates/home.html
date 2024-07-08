@@ -13,7 +13,7 @@
             {% for c in consigliati %}
                 {% if not c.oscurato and not c.venditore.oscurato %}
                     <li>
-                        <a href="{% url "pagina_negozio" c.pk %}">
+                        <a href="{% url "prodotti:pagina_negozio" c.pk %}">
                             <img src="{{ c.immagine.url }}" alt="{{ c.titolo }}">
                             <span>{{ c.titolo }}</span>
                         </a>
@@ -30,7 +30,7 @@
         {% for p in popolari %}
             {% if not p.oscurato and not p.venditore.oscurato %}
                 <li>
-                    <a href="{% url "pagina_negozio" p.pk %}">
+                    <a href="{% url "prodotti:pagina_negozio" p.pk %}">
                         <img src="{{ p.immagine.url }}" alt="{{ p.titolo }}">
                         <span>{{ p.titolo }}</span>
                     </a>
@@ -46,7 +46,7 @@
         {% for r in recenti %}
             {% if not r.oscurato and not r.venditore.oscurato %}
                 <li>
-                    <a href="{% url "pagina_negozio" r.pk %}">
+                    <a href="{% url "prodotti:pagina_negozio" r.pk %}">
                         <img src="{{ r.immagine.url }}" alt="{{ r.titolo }}">
                         <span>{{ r.titolo }}</span>
                     </a>

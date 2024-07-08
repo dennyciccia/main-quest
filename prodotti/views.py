@@ -43,14 +43,14 @@ def ordine(request, pk):
     # controllo se l'acquirente possiede già il prodotto
     if prodotto.acquirenti.filter(pk=acquirente.pk).exists():
         messages.error(request, "Hai già acquistato questo prodotto.")
-        return redirect("pagina_negozio", pk=pk)
+        return redirect("prodotti:pagina_negozio", pk=pk)
 
     if request.method == "POST":
         form = OrdineForm(request.POST)
         if form.is_valid():
             prodotto.acquirenti.add(acquirente)
             messages.success(request, message="Prodotto acquistato con successo.")
-            return redirect("pagina_negozio", pk=pk)
+            return redirect("prodotti:pagina_negozio", pk=pk)
     else:
         form = OrdineForm()
 
@@ -71,12 +71,12 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
         # controllo che l'acquirente non possiede il prodotto
         if not prodotto.acquirenti.filter(pk=acquirente.pk).exists():
             messages.error(request, "Non hai acquistato questo prodotto.")
-            return redirect("pagina_negozio", pk=prodotto.pk)
+            return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
         # controllo che l'acquirente non abbia già scritto una recensione
         if prodotto.recensioni.filter(utente=acquirente).exists():
             messages.error(request, "Hai già scritto una recensione per questo prodotto.")
-            return redirect("pagina_negozio", pk=prodotto.pk)
+            return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -95,7 +95,7 @@ class CreaRecensione(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
 
 class ModificaRecensione(GroupRequiredMixin, UpdateView):
@@ -112,7 +112,7 @@ class ModificaRecensione(GroupRequiredMixin, UpdateView):
         # controllo che l'acquirente abbia scritto la recensione
         if not recensione.utente == acquirente:
             messages.error(request, "Non hai scritto questa recensione.")
-            return redirect("pagina_negozio", pk=recensione.prodotto.pk)
+            return redirect("prodotti:pagina_negozio", pk=recensione.prodotto.pk)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -124,7 +124,7 @@ class ModificaRecensione(GroupRequiredMixin, UpdateView):
 
     def get_success_url(self):
         prodotto = self.get_context_data()["prodotto"]
-        return reverse("pagina_negozio", kwargs={"pk": prodotto.pk})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
 @group_required("Acquirenti")
@@ -135,12 +135,12 @@ def elimina_recensione(request, pk):
     # controllo che l'utente abbia scritto la recensione
     if request.user.acquirente_profile != recensione.utente:
         messages.error(request, "Non hai scritto questa recensione.")
-        return redirect("pagina_negozio", pk=prodotto.pk)
+        return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
     recensione.delete()
     messages.success(request, message="Recensione eliminata.")
 
-    return redirect(reverse("pagina_negozio", kwargs={"pk": prodotto.pk}))
+    return redirect(reverse("prodotti:pagina_negozio", kwargs={"pk": prodotto.pk}))
 
 
 class CreaDomanda(GroupRequiredMixin, CreateView):
@@ -164,7 +164,7 @@ class CreaDomanda(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse("pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": self.kwargs["pk"]})
 
 
 class RispondiDomanda(GroupRequiredMixin, UpdateView):
@@ -182,7 +182,7 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
         # controllo se l'acquirente possiede il prodotto
         if not prodotto.acquirenti.filter(pk=acquirente.pk).exists():
             messages.error(request, "Non hai acquistato questo prodotto.")
-            return redirect("pagina_negozio", pk=prodotto.pk)
+            return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -200,7 +200,7 @@ class RispondiDomanda(GroupRequiredMixin, UpdateView):
 
     def get_success_url(self):
         prodotto = self.get_context_data()["prodotto"]
-        return reverse("pagina_negozio", kwargs={"pk": prodotto.pk})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": prodotto.pk})
 
 
 class PubblicaProdotto(GroupRequiredMixin, CreateView):
@@ -223,7 +223,7 @@ class PubblicaProdotto(GroupRequiredMixin, CreateView):
         return response
 
     def get_success_url(self):
-        return reverse("pagina_negozio", kwargs={"pk": self.object.pk})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": self.object.pk})
 
 
 class ModificaProdotto(GroupRequiredMixin, UpdateView):
@@ -245,12 +245,12 @@ class ModificaProdotto(GroupRequiredMixin, UpdateView):
         # controllo se il venditore è il proprietario del prodotto
         if prodotto.venditore != venditore:
             messages.error(request, "Non sei il proprietario di questo prodotto.")
-            return redirect("pagina_negozio", pk=prodotto.pk)
+            return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("pagina_negozio", kwargs={"pk": self.object.pk})
+        return reverse("prodotti:pagina_negozio", kwargs={"pk": self.object.pk})
 
 
 @group_required("Venditori")
@@ -261,8 +261,8 @@ def elimina_prodotto(request, pk):
     # controllo se il venditore è il proprietario del prodotto
     if prodotto.venditore != venditore:
         messages.error(request, "Non sei il proprietario di questo prodotto.")
-        return redirect("pagina_negozio", pk=prodotto.pk)
+        return redirect("prodotti:pagina_negozio", pk=prodotto.pk)
 
     prodotto.delete()
     messages.success(request, message="Prodotto eliminato.")
-    return redirect("profilo_venditore", venditore.pk)
+    return redirect("utenti:profilo_venditore", venditore.pk)
