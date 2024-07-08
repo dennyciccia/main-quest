@@ -40,6 +40,8 @@ class OrdineTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("login"))
+        self.assertNotIn(self.acquirente, self.prodotto.acquirenti.all())
+        self.assertNotIn(self.prodotto, self.acquirente.prodotti.all())
 
     def test_ordine_utente_loggato_non_in_gruppo_acquirenti(self):
         """
@@ -53,16 +55,19 @@ class OrdineTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("login"))
+        self.assertNotIn(self.venditore, self.prodotto.acquirenti.all())
 
     def test_ordine_prodotto_specificato_non_esistente(self):
         """
         Caso in cui il prodotto specificato tramite la pk non esiste
         """
+        prev_count = self.acquirente.prodotti.count()
         url = reverse("ordine", kwargs={"pk": self.prodotto.pk+1})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)
         self.assertIsInstance(response, HttpResponseNotFound)
+        self.assertEqual(self.acquirente.prodotti.count(), prev_count)
 
     def test_ordine_utente_possiede_gia_il_prodotto(self):
         """
@@ -70,11 +75,13 @@ class OrdineTest(TestCase):
         """
         self.prodotto.acquirenti.add(self.acquirente)
 
+        prev_count = self.acquirente.prodotti.count()
         url = reverse("ordine", kwargs={"pk": self.prodotto.pk})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("pagina_negozio", kwargs={"pk": self.prodotto.pk}))
+        self.assertEqual(self.acquirente.prodotti.count(), prev_count)
 
     def test_ordine_utente_accede_alla_pagina_con_metodo_get(self):
         """
@@ -89,6 +96,8 @@ class OrdineTest(TestCase):
         self.assertTemplateUsed(response, "prodotti/ordine.html")
         self.assertIsInstance(response.context["form"], OrdineForm)
         self.assertEqual(response.context["prodotto"], self.prodotto)
+        self.assertNotIn(self.acquirente, self.prodotto.acquirenti.all())
+        self.assertNotIn(self.prodotto, self.acquirente.prodotti.all())
 
     def test_ordine_utente_accede_alla_pagina_con_metodo_post(self):
         """
@@ -100,6 +109,8 @@ class OrdineTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("pagina_negozio", kwargs={"pk": self.prodotto.pk}))
+        self.assertIn(self.acquirente, self.prodotto.acquirenti.all())
+        self.assertIn(self.prodotto, self.acquirente.prodotti.all())
 
     def test_ordine_utente_compila_form_con_campi_non_validi(self):
         """
@@ -118,3 +129,6 @@ class OrdineTest(TestCase):
         self.assertEqual(response.context["form"].errors["numero_carta"][0], "Ensure this value has at least 16 characters (it has 7).")
         self.assertEqual(response.context["form"].errors["scadenza_carta"][0], "Ensure this value has at least 6 characters (it has 5).")
         self.assertEqual(response.context["form"].errors["cvv"][0], "Ensure this value has at least 3 characters (it has 2).")
+
+        self.assertNotIn(self.acquirente, self.prodotto.acquirenti.all())
+        self.assertNotIn(self.prodotto, self.acquirente.prodotti.all())
